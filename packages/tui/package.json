@@ -1,7 +1,8 @@
 {
   "name": "@cc-team-viewer/tui",
   "version": "0.1.0",
-  "description": "CC Team Viewer 터미널 UI (ink 기반)",
+  "description": "Terminal dashboard for Claude Code Agent Teams — real-time monitoring of agents, tasks, messages",
+  "keywords": ["claude-code", "agent-teams", "monitoring", "dashboard", "terminal-ui", "tui", "cli"],
   "type": "module",
   "main": "./dist/index.js",
   "bin": {

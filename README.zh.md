@@ -10,7 +10,7 @@
 
 ![仪表板概览](packages/vscode/images/screenshot-overview.png)
 
-当 Agent Teams 并行工作时，可以一目了然地查看每个代理的状态、任务进度和代理间消息的仪表板。
+> **这是什么？** 实时监控 [Claude Code Agent Teams](https://code.claude.com/docs/en/agent-teams) 的 VS Code 扩展和终端 UI。一目了然地查看每个代理的状态、任务进度和代理间消息 — 无需额外配置，开箱即用。
 
 ## 为什么需要？
 

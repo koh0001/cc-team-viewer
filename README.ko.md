@@ -10,7 +10,7 @@
 
 ![대시보드 개요](packages/vscode/images/screenshot-overview.png)
 
-Agent Teams가 병렬로 작업할 때 각 에이전트의 상태, 태스크 진행률, 에이전트 간 메시지를 한눈에 볼 수 있는 대시보드입니다.
+> **이게 뭔가요?** [Claude Code Agent Teams](https://code.claude.com/docs/en/agent-teams)를 실시간 모니터링하는 VS Code 확장 및 터미널 UI입니다. 각 에이전트의 상태, 태스크 진행률, 에이전트 간 메시지를 한눈에 볼 수 있습니다 — 별도 설정 없이 바로 동작합니다.
 
 ## 왜 필요한가?
 

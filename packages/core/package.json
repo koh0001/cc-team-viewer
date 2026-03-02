@@ -1,7 +1,8 @@
 {
   "name": "@cc-team-viewer/core",
   "version": "0.1.0",
-  "description": "Agent Teams 파일 시스템 감시 및 상태 관리 코어 라이브러리",
+  "description": "Real-time monitoring library for Claude Code Agent Teams — file watching, JSON parsing, events",
+  "keywords": ["claude-code", "agent-teams", "monitoring", "dashboard", "developer-tools"],
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",

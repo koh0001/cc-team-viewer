@@ -10,7 +10,7 @@
 
 ![ダッシュボード概要](packages/vscode/images/screenshot-overview.png)
 
-Agent Teamsが並列で作業する際、各エージェントのステータス、タスクの進捗、エージェント間のメッセージを一目で確認できるダッシュボードです。
+> **これは何？** [Claude Code Agent Teams](https://code.claude.com/docs/en/agent-teams)をリアルタイムで監視するVS Code拡張およびターミナルUIです。各エージェントのステータス、タスクの進捗、エージェント間のメッセージを一目で確認できます — 追加設定なしですぐに動作します。
 
 ## なぜ必要？
 

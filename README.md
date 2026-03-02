@@ -10,7 +10,7 @@
 
 ![Dashboard Overview](packages/vscode/images/screenshot-overview.png)
 
-A dashboard that lets you see each agent's status, task progress, and inter-agent messages at a glance when Agent Teams work in parallel.
+> **What is this?** A VS Code extension and terminal UI that monitors [Claude Code Agent Teams](https://code.claude.com/docs/en/agent-teams) in real-time. See every agent's status, task progress, and inter-agent messages at a glance — no extra setup required.
 
 ## Why?
 
