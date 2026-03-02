@@ -47,6 +47,24 @@
         }
       ]
     },
+    "configuration": {
+      "title": "CC Team Viewer",
+      "properties": {
+        "ccTeamViewer.language": {
+          "type": "string",
+          "enum": ["auto", "ko", "en", "ja", "zh"],
+          "default": "auto",
+          "enumDescriptions": [
+            "Auto-detect (시스템 언어 자동 감지)",
+            "한국어",
+            "English",
+            "日本語",
+            "中文"
+          ],
+          "description": "Dashboard display language / 대시보드 표시 언어"
+        }
+      }
+    },
     "menus": {
       "view/title": [
         {

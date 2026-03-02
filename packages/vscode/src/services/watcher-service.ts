@@ -10,6 +10,7 @@ import {
   createI18n,
   type TeamSnapshot,
   type I18nInstance,
+  type Locale,
 } from "@cc-team-viewer/core";
 
 interface UpdateEvent {
@@ -78,6 +79,11 @@ export class WatcherService implements vscode.Disposable {
   /** i18n 인스턴스 */
   getI18n(): I18nInstance {
     return this.i18n;
+  }
+
+  /** 로케일 변경 (불변 패턴: 새 I18nInstance 생성) */
+  setLocale(locale: Locale): void {
+    this.i18n = createI18n(locale);
   }
 
   /** 리소스 정리 */

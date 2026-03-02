@@ -8,6 +8,7 @@
  * 4. 상태 바에 진행률 요약 표시
  */
 import * as vscode from "vscode";
+import { detectLocale, type Locale } from "@cc-team-viewer/core";
 import { WatcherService } from "./services/watcher-service";
 import { TeamTreeProvider } from "./providers/tree-provider";
 import { DashboardProvider } from "./providers/dashboard-provider";
@@ -82,14 +83,32 @@ export function activate(context: vscode.ExtensionContext) {
     }),
   );
 
-  // 6. 에러 처리
+  // 6. 초기 언어 설정 반영
+  const langSetting = vscode.workspace.getConfiguration("ccTeamViewer").get<string>("language", "auto");
+  if (langSetting !== "auto") {
+    watcherService.setLocale(langSetting as Locale);
+  }
+
+  // 7. 설정 변경 감지 (언어)
+  context.subscriptions.push(
+    vscode.workspace.onDidChangeConfiguration((e) => {
+      if (e.affectsConfiguration("ccTeamViewer.language")) {
+        const lang = vscode.workspace.getConfiguration("ccTeamViewer").get<string>("language", "auto");
+        const locale = lang === "auto" ? detectLocale() : lang as Locale;
+        watcherService.setLocale(locale);
+        dashboardProvider.changeLocale(locale);
+      }
+    }),
+  );
+
+  // 8. 에러 처리
   context.subscriptions.push(
     watcherService.onError(({ error, context: ctx }) => {
       vscode.window.showWarningMessage(`CC Team Viewer [${ctx}]: ${error.message}`);
     }),
   );
 
-  // 7. 감시 시작
+  // 9. 감시 시작
   watcherService.start().catch((err) => {
     vscode.window.showWarningMessage(
       `CC Team Viewer: ${(err as Error).message}`,

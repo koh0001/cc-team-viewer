@@ -60,6 +60,7 @@ export interface InitPayload {
   teams: Record<string, SnapshotPayload>;
   selectedTeam: string;
   translations: Record<string, string>;
+  locale: string;
 }
 
 /** Extension → WebView 메시지 */
@@ -67,6 +68,7 @@ export type ExtToWebMessage =
   | { type: "init"; data: InitPayload }
   | { type: "snapshotUpdate"; teamName: string; data: SnapshotPayload }
   | { type: "teamRemoved"; teamName: string }
+  | { type: "translationsUpdate"; translations: Record<string, string>; locale: string }
   | { type: "error"; message: string };
 
 /** WebView → Extension 메시지 */
@@ -74,4 +76,5 @@ export type WebToExtMessage =
   | { command: "ready" }
   | { command: "selectTeam"; teamName: string }
   | { command: "refresh" }
-  | { command: "changeTab"; tab: string };
+  | { command: "changeTab"; tab: string }
+  | { command: "changeLanguage" };

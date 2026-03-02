@@ -11,12 +11,16 @@ export function getDashboardJs(): string {
     try {
     const vscode = acquireVsCodeApi();
 
+    // 로케일 표시 이름
+    const LOCALE_NAMES = { ko: '한국어', en: 'English', ja: '日本語', zh: '中文' };
+
     // 상태
     let state = {
       teams: {},
       selectedTeam: '',
       currentTab: 'overview',
-      translations: {}
+      translations: {},
+      locale: 'ko'
     };
 
     // 준비 완료 신호
@@ -30,6 +34,12 @@ export function getDashboardJs(): string {
           state.teams = msg.data.teams;
           state.selectedTeam = msg.data.selectedTeam;
           state.translations = msg.data.translations;
+          state.locale = msg.data.locale || 'ko';
+          renderAll();
+          break;
+        case 'translationsUpdate':
+          state.translations = msg.translations;
+          state.locale = msg.locale || state.locale;
           renderAll();
           break;
         case 'snapshotUpdate':
@@ -84,6 +94,7 @@ export function getDashboardJs(): string {
 
       if (!hasTeams) return;
 
+      renderLanguageButton();
       renderTeamSelector(teamNames);
       const snap = state.teams[state.selectedTeam];
       if (!snap) return;
@@ -94,6 +105,22 @@ export function getDashboardJs(): string {
       renderTasks(snap);
       renderMessages(snap);
       renderDeps(snap);
+    }
+
+    function renderLanguageButton() {
+      const header = document.getElementById('header');
+      let btn = document.getElementById('lang-btn');
+      if (!btn) {
+        btn = document.createElement('button');
+        btn.id = 'lang-btn';
+        btn.className = 'lang-btn';
+        btn.addEventListener('click', function() {
+          vscode.postMessage({ command: 'changeLanguage' });
+        });
+        header.appendChild(btn);
+      }
+      const name = LOCALE_NAMES[state.locale] || state.locale;
+      btn.textContent = name + ' \\u25BE';
     }
 
     function renderTeamSelector(teamNames) {

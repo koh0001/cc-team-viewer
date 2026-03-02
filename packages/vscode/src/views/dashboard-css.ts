@@ -55,6 +55,22 @@ export function getDashboardCss(): string {
       border-bottom: none;
       margin-bottom: 0;
     }
+    .lang-btn {
+      background: var(--vscode-editorWidget-background);
+      color: var(--vscode-descriptionForeground);
+      border: 1px solid var(--vscode-widget-border);
+      border-radius: 4px;
+      padding: 3px 10px;
+      font-size: 11px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      white-space: nowrap;
+    }
+    .lang-btn:hover {
+      background: var(--overlay-strong);
+      color: var(--vscode-foreground);
+      border-color: var(--vscode-focusBorder);
+    }
 
     /* 팀 pill 바 */
     .team-pills {

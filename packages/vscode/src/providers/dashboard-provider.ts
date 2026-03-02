@@ -5,7 +5,7 @@
  * WebView에서 ready 신호를 받은 후 데이터를 전송하여 메시지 유실을 방지한다.
  */
 import * as vscode from "vscode";
-import type { TeamSnapshot, TranslationKey } from "@cc-team-viewer/core";
+import type { TeamSnapshot, TranslationKey, Locale } from "@cc-team-viewer/core";
 import type { WatcherService } from "../services/watcher-service";
 import type {
   ExtToWebMessage,
@@ -110,6 +110,12 @@ export class DashboardProvider implements vscode.Disposable {
     }
   }
 
+  /** 외부에서 로케일 변경 (Settings UI → extension.ts → 여기) */
+  changeLocale(locale: Locale): void {
+    this.watcherService.setLocale(locale);
+    this.sendTranslationsUpdate();
+  }
+
   /** 새로고침 */
   refresh(): void {
     if (!this.panel) return;
@@ -137,6 +143,16 @@ export class DashboardProvider implements vscode.Disposable {
       case "refresh":
         this.refresh();
         break;
+      case "changeLanguage": {
+        // 대시보드 버튼 클릭 → 다음 언어로 순환
+        const nextI18n = this.watcherService.getI18n().cycleLocale();
+        this.watcherService.setLocale(nextI18n.locale);
+        this.sendTranslationsUpdate();
+        // VS Code 설정과 동기화
+        vscode.workspace.getConfiguration("ccTeamViewer")
+          .update("language", nextI18n.locale, vscode.ConfigurationTarget.Global);
+        break;
+      }
     }
   }
 
@@ -166,6 +182,7 @@ export class DashboardProvider implements vscode.Disposable {
         teams,
         selectedTeam: this.selectedTeam,
         translations: this.getTranslationsForWebview(),
+        locale: this.watcherService.getI18n().locale,
       },
     });
   }
@@ -221,6 +238,16 @@ export class DashboardProvider implements vscode.Disposable {
         timestamp: msg.timestamp,
       })),
     };
+  }
+
+  /** 현재 번역 + 로케일을 WebView에 전송 */
+  private sendTranslationsUpdate(): void {
+    const i18n = this.watcherService.getI18n();
+    this.postMessage({
+      type: "translationsUpdate",
+      translations: this.getTranslationsForWebview(),
+      locale: i18n.locale,
+    });
   }
 
   /** WebView에 전달할 번역 맵 생성 */
