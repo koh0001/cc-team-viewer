@@ -39,15 +39,13 @@ packages/
 
 ```bash
 # 설치 & 빌드
+git clone https://github.com/koh0001/cc-team-viewer.git
+cd cc-team-viewer
 npm install
 npm run build
 
 # 실행
 npm run tui
-
-# 또는 글로벌 설치
-npm install -g @cc-team-viewer/tui
-cc-team-viewer
 ```
 
 ### VS Code 확장
