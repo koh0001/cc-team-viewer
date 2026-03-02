@@ -262,6 +262,134 @@ export function getDashboardCss(): string {
     .task-owner { color: var(--vscode-textLink-foreground); }
     .task-unassigned { color: var(--vscode-descriptionForeground); font-style: italic; }
 
+    /* 태스크 뷰 토글 */
+    .task-view-toggle {
+      display: flex;
+      gap: 0;
+      margin-bottom: 12px;
+      border: 1px solid var(--vscode-widget-border);
+      border-radius: 4px;
+      overflow: hidden;
+      width: fit-content;
+    }
+    .task-view-btn {
+      background: var(--vscode-editorWidget-background);
+      color: var(--vscode-descriptionForeground);
+      border: none;
+      padding: 4px 12px;
+      font-size: 11px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      border-right: 1px solid var(--vscode-widget-border);
+    }
+    .task-view-btn:last-child { border-right: none; }
+    .task-view-btn:hover {
+      background: var(--overlay-medium);
+      color: var(--vscode-foreground);
+    }
+    .task-view-btn.active {
+      background: var(--vscode-badge-background);
+      color: var(--vscode-badge-foreground);
+      font-weight: 600;
+    }
+
+    /* 칸반 보드 */
+    .kanban-board {
+      display: flex;
+      gap: 12px;
+      overflow-x: auto;
+      padding-bottom: 4px;
+    }
+    .kanban-column {
+      flex: 1;
+      min-width: 180px;
+      background: var(--overlay-subtle);
+      border-radius: 6px;
+      padding: 8px;
+    }
+    .kanban-column-header {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 6px 8px;
+      border-bottom: 1px solid var(--vscode-widget-border);
+      margin-bottom: 8px;
+    }
+    .kanban-column-title {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+      color: var(--vscode-descriptionForeground);
+    }
+    .kanban-column-count {
+      background: var(--vscode-badge-background);
+      color: var(--vscode-badge-foreground);
+      font-size: 10px;
+      font-weight: 600;
+      padding: 1px 6px;
+      border-radius: 8px;
+      margin-left: auto;
+    }
+    .kanban-cards {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .kanban-card {
+      background: var(--vscode-editor-background);
+      border: 1px solid var(--vscode-widget-border);
+      border-radius: 4px;
+      padding: 8px 10px;
+      transition: all 0.15s ease;
+      cursor: default;
+    }
+    .kanban-card:hover {
+      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+      border-color: var(--vscode-focusBorder);
+      transform: translateY(-1px);
+    }
+    .kanban-card-completed { opacity: 0.5; }
+    .kanban-card-completed .kanban-card-subject { text-decoration: line-through; }
+    .kanban-card-id {
+      font-size: 10px;
+      color: var(--vscode-descriptionForeground);
+      font-weight: 600;
+    }
+    .kanban-card-subject {
+      font-size: 12px;
+      margin: 4px 0;
+      line-height: 1.4;
+      word-break: break-word;
+    }
+    .kanban-card-blocked {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      margin: 4px 0;
+    }
+    .kanban-blocked-badge {
+      background: rgba(255,165,0,0.15);
+      color: var(--vscode-charts-orange, #cc8800);
+      font-size: 10px;
+      padding: 1px 6px;
+      border-radius: 3px;
+      font-weight: 500;
+    }
+    .kanban-card-footer {
+      margin-top: 6px;
+      font-size: 11px;
+      border-top: 1px solid var(--vscode-widget-border);
+      padding-top: 4px;
+    }
+    .kanban-empty {
+      text-align: center;
+      color: var(--vscode-descriptionForeground);
+      font-size: 11px;
+      padding: 16px 0;
+      opacity: 0.5;
+    }
+
     /* 메시지 로그 */
     .message-row {
       display: flex;

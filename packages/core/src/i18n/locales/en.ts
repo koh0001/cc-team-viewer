@@ -56,6 +56,12 @@ export const en: TranslationMap = {
   "task.headerStatus": "Status",
   "task.unassigned": "Unassigned",
   "task.noTasks": "No tasks",
+  "task.viewTable": "Table",
+  "task.viewKanban": "Kanban",
+  "task.columnPending": "Pending",
+  "task.columnInProgress": "In Progress",
+  "task.columnCompleted": "Completed",
+  "task.blockedByLabel": "Blocked by",
 
   // 메시지
   "message.headerFrom": "From",

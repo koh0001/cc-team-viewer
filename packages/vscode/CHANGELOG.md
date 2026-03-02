@@ -2,6 +2,16 @@
 
 All notable changes to the CC Team Viewer VS Code extension will be documented in this file.
 
+## [0.1.1] - 2025-03-03
+
+### Added
+
+- Kanban board view as alternative to task table
+  - Toggle button group (Table / Kanban) at top of Tasks tab
+  - Three-column layout: Pending, In Progress, Completed
+  - Task cards with ID, subject, owner, dependency badges
+- Language switching via Settings and dashboard button
+
 ## [0.1.0] - 2025-03-03
 
 ### Added

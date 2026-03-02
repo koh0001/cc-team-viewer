@@ -19,6 +19,7 @@ export function getDashboardJs(): string {
       teams: {},
       selectedTeam: '',
       currentTab: 'overview',
+      taskViewMode: 'table',
       translations: {},
       locale: 'ko'
     };
@@ -230,62 +231,99 @@ export function getDashboardJs(): string {
     }
 
     function renderTasks(snap) {
-      const el = document.getElementById('tasks-content');
+      var el = document.getElementById('tasks-content');
       el.textContent = '';
       if (!snap.tasks.length) {
-        const p = document.createElement('p');
+        var p = document.createElement('p');
         p.style.color = 'var(--vscode-descriptionForeground)';
         p.textContent = t('task.noTasks');
         el.appendChild(p);
         return;
       }
 
-      const table = document.createElement('table');
+      renderTaskViewToggle(el);
+
+      if (state.taskViewMode === 'kanban') {
+        renderTaskKanban(el, snap.tasks);
+      } else {
+        renderTaskTable(el, snap.tasks);
+      }
+    }
+
+    function renderTaskViewToggle(container) {
+      var toggleBar = document.createElement('div');
+      toggleBar.className = 'task-view-toggle';
+
+      var tableBtn = document.createElement('button');
+      tableBtn.className = 'task-view-btn' + (state.taskViewMode === 'table' ? ' active' : '');
+      tableBtn.textContent = t('task.viewTable');
+      tableBtn.addEventListener('click', function() {
+        state.taskViewMode = 'table';
+        var snap = state.teams[state.selectedTeam];
+        if (snap) renderTasks(snap);
+      });
+
+      var kanbanBtn = document.createElement('button');
+      kanbanBtn.className = 'task-view-btn' + (state.taskViewMode === 'kanban' ? ' active' : '');
+      kanbanBtn.textContent = t('task.viewKanban');
+      kanbanBtn.addEventListener('click', function() {
+        state.taskViewMode = 'kanban';
+        var snap = state.teams[state.selectedTeam];
+        if (snap) renderTasks(snap);
+      });
+
+      toggleBar.appendChild(tableBtn);
+      toggleBar.appendChild(kanbanBtn);
+      container.appendChild(toggleBar);
+    }
+
+    function renderTaskTable(container, tasks) {
+      var table = document.createElement('table');
       table.className = 'task-table';
 
-      const thead = document.createElement('thead');
-      const headerRow = document.createElement('tr');
-      [t('task.headerId'), '', t('task.headerTask'), t('task.headerOwner')].forEach(text => {
-        const th = document.createElement('th');
+      var thead = document.createElement('thead');
+      var headerRow = document.createElement('tr');
+      [t('task.headerId'), '', t('task.headerTask'), t('task.headerOwner')].forEach(function(text) {
+        var th = document.createElement('th');
         th.textContent = text;
         headerRow.appendChild(th);
       });
       thead.appendChild(headerRow);
       table.appendChild(thead);
 
-      const tbody = document.createElement('tbody');
-      snap.tasks.forEach(task => {
-        const tr = document.createElement('tr');
+      var tbody = document.createElement('tbody');
+      tasks.forEach(function(task) {
+        var tr = document.createElement('tr');
         if (task.status === 'completed') tr.className = 'completed';
 
-        const tdId = document.createElement('td');
+        var tdId = document.createElement('td');
         tdId.textContent = '#' + task.id;
         tr.appendChild(tdId);
 
-        const tdStatus = document.createElement('td');
-        const dot = document.createElement('span');
+        var tdStatus = document.createElement('td');
+        var dot = document.createElement('span');
         dot.className = 'task-status ' + task.status;
         tdStatus.appendChild(dot);
         tr.appendChild(tdStatus);
 
-        const tdSubject = document.createElement('td');
+        var tdSubject = document.createElement('td');
         tdSubject.textContent = task.subject;
         if (task.blockedBy.length > 0 && task.status === 'pending') {
-          const blockedSpan = document.createElement('span');
+          var blockedSpan = document.createElement('span');
           blockedSpan.style.color = 'var(--vscode-descriptionForeground)';
           blockedSpan.textContent = ' \\u2190 #' + task.blockedBy.join(', #');
           tdSubject.appendChild(blockedSpan);
         }
         tr.appendChild(tdSubject);
 
-        const tdOwner = document.createElement('td');
+        var tdOwner = document.createElement('td');
         if (task.owner) {
-          const ownerSpan = document.createElement('span');
+          var ownerSpan = document.createElement('span');
           ownerSpan.className = 'task-owner';
           ownerSpan.textContent = task.owner;
           tdOwner.appendChild(ownerSpan);
         } else {
-          const unassigned = document.createElement('span');
+          var unassigned = document.createElement('span');
           unassigned.className = 'task-unassigned';
           unassigned.textContent = t('task.unassigned');
           tdOwner.appendChild(unassigned);
@@ -295,7 +333,103 @@ export function getDashboardJs(): string {
         tbody.appendChild(tr);
       });
       table.appendChild(tbody);
-      el.appendChild(table);
+      container.appendChild(table);
+    }
+
+    function renderTaskKanban(container, tasks) {
+      var board = document.createElement('div');
+      board.className = 'kanban-board';
+
+      var columns = [
+        { status: 'pending', label: t('task.columnPending') },
+        { status: 'in_progress', label: t('task.columnInProgress') },
+        { status: 'completed', label: t('task.columnCompleted') }
+      ];
+
+      columns.forEach(function(col) {
+        var column = document.createElement('div');
+        column.className = 'kanban-column';
+
+        var header = document.createElement('div');
+        header.className = 'kanban-column-header';
+
+        var dot = document.createElement('span');
+        dot.className = 'task-status ' + col.status;
+        header.appendChild(dot);
+
+        var title = document.createElement('span');
+        title.className = 'kanban-column-title';
+        title.textContent = col.label;
+        header.appendChild(title);
+
+        var colTasks = tasks.filter(function(tk) { return tk.status === col.status; });
+        var count = document.createElement('span');
+        count.className = 'kanban-column-count';
+        count.textContent = String(colTasks.length);
+        header.appendChild(count);
+
+        column.appendChild(header);
+
+        var cardContainer = document.createElement('div');
+        cardContainer.className = 'kanban-cards';
+
+        colTasks.forEach(function(task) {
+          var card = document.createElement('div');
+          card.className = 'kanban-card';
+          if (task.status === 'completed') card.classList.add('kanban-card-completed');
+
+          var cardId = document.createElement('span');
+          cardId.className = 'kanban-card-id';
+          cardId.textContent = '#' + task.id;
+          card.appendChild(cardId);
+
+          var cardSubject = document.createElement('div');
+          cardSubject.className = 'kanban-card-subject';
+          cardSubject.textContent = task.subject;
+          card.appendChild(cardSubject);
+
+          if (task.blockedBy.length > 0 && task.status === 'pending') {
+            var blockedDiv = document.createElement('div');
+            blockedDiv.className = 'kanban-card-blocked';
+            task.blockedBy.forEach(function(blockId) {
+              var badge = document.createElement('span');
+              badge.className = 'kanban-blocked-badge';
+              badge.textContent = '#' + blockId;
+              blockedDiv.appendChild(badge);
+            });
+            card.appendChild(blockedDiv);
+          }
+
+          var cardFooter = document.createElement('div');
+          cardFooter.className = 'kanban-card-footer';
+          if (task.owner) {
+            var ownerSpan = document.createElement('span');
+            ownerSpan.className = 'task-owner';
+            ownerSpan.textContent = task.owner;
+            cardFooter.appendChild(ownerSpan);
+          } else {
+            var unassignedSpan = document.createElement('span');
+            unassignedSpan.className = 'task-unassigned';
+            unassignedSpan.textContent = t('task.unassigned');
+            cardFooter.appendChild(unassignedSpan);
+          }
+          card.appendChild(cardFooter);
+
+          cardContainer.appendChild(card);
+        });
+
+        if (colTasks.length === 0) {
+          var empty = document.createElement('div');
+          empty.className = 'kanban-empty';
+          empty.textContent = '-';
+          cardContainer.appendChild(empty);
+        }
+
+        column.appendChild(cardContainer);
+        board.appendChild(column);
+      });
+
+      container.appendChild(board);
     }
 
     function renderMessages(snap) {

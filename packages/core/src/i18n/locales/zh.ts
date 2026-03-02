@@ -56,6 +56,12 @@ export const zh: TranslationMap = {
   "task.headerStatus": "状态",
   "task.unassigned": "未分配",
   "task.noTasks": "无任务",
+  "task.viewTable": "表格",
+  "task.viewKanban": "看板",
+  "task.columnPending": "等待中",
+  "task.columnInProgress": "进行中",
+  "task.columnCompleted": "已完成",
+  "task.blockedByLabel": "被阻塞",
 
   // 消息
   "message.headerFrom": "发送",

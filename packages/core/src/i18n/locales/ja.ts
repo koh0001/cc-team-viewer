@@ -56,6 +56,12 @@ export const ja: TranslationMap = {
   "task.headerStatus": "状態",
   "task.unassigned": "未割当",
   "task.noTasks": "タスクなし",
+  "task.viewTable": "テーブル",
+  "task.viewKanban": "カンバン",
+  "task.columnPending": "待機",
+  "task.columnInProgress": "進行中",
+  "task.columnCompleted": "完了",
+  "task.blockedByLabel": "ブロック",
 
   // メッセージ
   "message.headerFrom": "送信",

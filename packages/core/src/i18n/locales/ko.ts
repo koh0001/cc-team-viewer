@@ -56,6 +56,12 @@ export const ko: TranslationMap = {
   "task.headerStatus": "상태",
   "task.unassigned": "미할당",
   "task.noTasks": "태스크 없음",
+  "task.viewTable": "표",
+  "task.viewKanban": "칸반",
+  "task.columnPending": "대기",
+  "task.columnInProgress": "진행중",
+  "task.columnCompleted": "완료",
+  "task.blockedByLabel": "차단",
 
   // 메시지
   "message.headerFrom": "발신",

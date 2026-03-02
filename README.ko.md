@@ -25,15 +25,15 @@ CC Team Viewer는 `~/.claude/teams/`와 `~/.claude/tasks/` 디렉토리의 JSON 
 
 - **팀 개요** — 활성 팀, 멤버 수, 전체 진행률
 - **에이전트 상태** — 각 에이전트가 현재 무슨 작업 중인지, 모델(opus/sonnet/haiku), 백엔드 타입
-- **태스크 보드** — 상태(pending/in_progress/completed), 담당자, 의존성, 차단 관계
+- **태스크 보드** — 표/칸반 보드 전환, 상태, 담당자, 의존성, 차단 관계
 - **메시지 로그** — 에이전트 간 통신 내역 실시간 표시
 - **의존성 그래프** — 태스크 간 블로킹 관계 시각화
 - **진행률 통계** — 완료율, 경과 시간, 에이전트별 처리량
 - **다국어 지원** — 한국어, English, 日本語, 中文
 
-| 태스크 | 메시지 |
-|--------|--------|
-| ![태스크](packages/vscode/images/screenshot-tasks.png) | ![메시지](packages/vscode/images/screenshot-messages.png) |
+| 태스크 | 칸반 | 메시지 |
+|--------|------|--------|
+| ![태스크](packages/vscode/images/screenshot-tasks.png) | ![칸반](packages/vscode/images/screenshot-kanban.png) | ![메시지](packages/vscode/images/screenshot-messages.png) |
 
 ## 패키지 구조
 

@@ -25,15 +25,15 @@ CC Team Viewerは`~/.claude/teams/`と`~/.claude/tasks/`ディレクトリのJSO
 
 - **チーム概要** — アクティブチーム、メンバー数、全体進捗
 - **エージェントステータス** — 各エージェントの作業内容、モデル(opus/sonnet/haiku)、バックエンドタイプ
-- **タスクボード** — ステータス(pending/in_progress/completed)、担当者、依存関係、ブロッキング
+- **タスクボード** — テーブル/カンバンボード切替、ステータス、担当者、依存関係、ブロッキング
 - **メッセージログ** — エージェント間通信のリアルタイム表示
 - **依存関係グラフ** — タスク間のブロッキング関係を可視化
 - **進捗統計** — 完了率、経過時間、エージェント別スループット
 - **多言語サポート** — English、한국어、日本語、中文
 
-| タスク | メッセージ |
-|--------|-----------|
-| ![タスク](packages/vscode/images/screenshot-tasks.png) | ![メッセージ](packages/vscode/images/screenshot-messages.png) |
+| タスク | カンバン | メッセージ |
+|--------|----------|-----------|
+| ![タスク](packages/vscode/images/screenshot-tasks.png) | ![カンバン](packages/vscode/images/screenshot-kanban.png) | ![メッセージ](packages/vscode/images/screenshot-messages.png) |
 
 ## パッケージ構造
 

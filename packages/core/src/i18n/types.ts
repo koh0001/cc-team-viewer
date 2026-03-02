@@ -70,6 +70,12 @@ export type TranslationMap = {
   "task.headerStatus": string;
   "task.unassigned": string;
   "task.noTasks": string;
+  "task.viewTable": string;
+  "task.viewKanban": string;
+  "task.columnPending": string;
+  "task.columnInProgress": string;
+  "task.columnCompleted": string;
+  "task.blockedByLabel": string;
 
   // 메시지
   "message.headerFrom": string;

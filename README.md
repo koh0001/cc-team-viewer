@@ -25,15 +25,15 @@ CC Team Viewer watches JSON files in `~/.claude/teams/` and `~/.claude/tasks/` i
 
 - **Team Overview** — Active teams, member count, overall progress
 - **Agent Status** — What each agent is working on, model (opus/sonnet/haiku), backend type
-- **Task Board** — Status (pending/in_progress/completed), owner, dependencies, blocking
+- **Task Board** — Table view + Kanban board (toggle), status, owner, dependencies, blocking
 - **Message Log** — Real-time inter-agent communication
 - **Dependency Graph** — Task blocking relationships
 - **Progress Stats** — Completion rate, elapsed time, per-agent throughput
 - **Multi-language** — UI in English, Korean, Japanese, Chinese
 
-| Tasks | Messages |
-|-------|----------|
-| ![Tasks](packages/vscode/images/screenshot-tasks.png) | ![Messages](packages/vscode/images/screenshot-messages.png) |
+| Tasks | Kanban | Messages |
+|-------|--------|----------|
+| ![Tasks](packages/vscode/images/screenshot-tasks.png) | ![Kanban](packages/vscode/images/screenshot-kanban.png) | ![Messages](packages/vscode/images/screenshot-messages.png) |
 
 ## Package Structure
 
