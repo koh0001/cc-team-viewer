@@ -1,87 +1,93 @@
-# 🔭 CC Team Viewer
+# CC Team Viewer
 
-**Claude Code Agent Teams 실시간 모니터링 도구**
+**Real-time monitoring tool for Claude Code Agent Teams**
 
-Agent Teams가 병렬로 작업할 때 각 에이전트의 상태, 태스크 진행률, 에이전트 간 메시지를 한눈에 볼 수 있는 대시보드입니다.
+[한국어](README.ko.md) | [日本語](README.ja.md) | [中文](README.zh.md)
 
-## 왜 필요한가?
+A dashboard that lets you see each agent's status, task progress, and inter-agent messages at a glance when Agent Teams work in parallel.
 
-Claude Code의 Agent Teams는 강력하지만, 현재 모니터링 방법이 제한적입니다:
-- `Shift+Down`으로 에이전트 사이를 순환하거나
-- `Ctrl+T`로 태스크 목록을 보거나
-- tmux pane을 직접 눈으로 확인해야 합니다
+## Why?
 
-CC Team Viewer는 `~/.claude/teams/`와 `~/.claude/tasks/` 디렉토리의 JSON 파일을 실시간 감시하여, 별도의 터미널 pane이나 VS Code 패널에서 전체 팀 상황을 한눈에 보여줍니다.
+Claude Code's Agent Teams are powerful, but monitoring options are limited:
+- Cycle between agents with `Shift+Down`
+- View task list with `Ctrl+T`
+- Manually check tmux panes
 
-## 기능
+CC Team Viewer watches JSON files in `~/.claude/teams/` and `~/.claude/tasks/` in real-time, showing the full team overview in a separate terminal pane or VS Code panel.
 
-- 🏠 **팀 목록 & 개요** — 활성 팀, 멤버 수, 전체 진행률
-- 👤 **에이전트 상태** — 각 에이전트가 현재 무슨 작업 중인지, 모델(opus/sonnet/haiku), 백엔드 타입
-- 📋 **태스크 보드** — 상태(pending/in_progress/completed), 담당자, 의존성, 차단 관계
-- 💬 **메시지 로그** — 에이전트 간 통신 내역 실시간 표시
-- 🔗 **의존성 그래프** — 태스크 간 블로킹 관계 시각화
-- 📊 **진행률 통계** — 완료율, 경과 시간, 에이전트별 처리량
+## Features
 
-## 패키지 구조
+- **Team Overview** — Active teams, member count, overall progress
+- **Agent Status** — What each agent is working on, model (opus/sonnet/haiku), backend type
+- **Task Board** — Status (pending/in_progress/completed), owner, dependencies, blocking
+- **Message Log** — Real-time inter-agent communication
+- **Dependency Graph** — Task blocking relationships
+- **Progress Stats** — Completion rate, elapsed time, per-agent throughput
+
+## Package Structure
 
 ```
 packages/
-├── core/     # 파일 감시 + JSON 파싱 + 이벤트 (공유 라이브러리)
-├── tui/      # 터미널 UI (ink 기반, Windows Terminal/iTerm2/tmux 호환)
-├── vscode/   # VS Code 확장프로그램 (사이드바 패널)
-└── web/      # 웹 대시보드 (선택적, Docker 호스팅용)
+├── core/     # File watching + JSON parsing + events (shared library)
+├── tui/      # Terminal UI (ink-based, Windows Terminal/iTerm2/tmux compatible)
+└── vscode/   # VS Code extension (sidebar panel + WebView dashboard)
 ```
 
-## 빠른 시작
+## Quick Start
 
-### 터미널 TUI
+### Terminal TUI
+
 ```bash
-# 설치
+# Install & build
 npm install
 npm run build
 
-# 실행
+# Run
 npm run tui
 
-# 또는 글로벌 설치
+# Or install globally
 npm install -g @cc-team-viewer/tui
 cc-team-viewer
 ```
 
-### VS Code 확장
+### VS Code Extension
+
 ```bash
-# 빌드 & 설치
+# Build & install
 cd packages/vscode
 npm run package
 code --install-extension cc-team-viewer-*.vsix
 ```
 
-## 호환성
+## Compatibility
 
-| 환경 | TUI | VS Code 확장 | 웹 대시보드 |
-|------|-----|-------------|-----------|
-| macOS (iTerm2/Terminal) | ✅ | ✅ | ✅ |
-| macOS (tmux pane) | ✅ | - | ✅ |
-| Windows (WSL + Windows Terminal) | ✅ | ✅ (Remote WSL) | ✅ |
-| Linux | ✅ | ✅ | ✅ |
+| Environment | TUI | VS Code Extension |
+|-------------|-----|-------------------|
+| macOS (iTerm2/Terminal) | Supported | Supported |
+| macOS (tmux pane) | Supported | - |
+| Windows (native) | Supported | Supported |
+| Windows (WSL) | Supported | Supported (Remote WSL) |
+| Linux | Supported | Supported |
 
-> **참고**: Agent Teams 자체는 tmux(split-pane) 또는 in-process 모드로 동작합니다.
-> CC Team Viewer는 tmux와 무관하게, 파일 시스템만 읽으므로 어떤 환경에서든 동작합니다.
+> **Note**: Agent Teams run in tmux (split-pane) or in-process mode.
+> CC Team Viewer only reads the filesystem, so it works in any environment.
 
-## 요구 사항
+## Requirements
 
 - Node.js 20+
-- Claude Code (Agent Teams 활성화: `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1`)
+- Claude Code with Agent Teams
 
-## 개발
+## Development
 
 ```bash
-git clone https://github.com/your-username/cc-team-viewer.git
+git clone https://github.com/koh0001/cc-team-viewer.git
 cd cc-team-viewer
 npm install
-npm run dev        # TUI 개발 모드 (--watch)
+npm run dev        # TUI dev mode (--watch)
+npm run build      # Build all packages
+npm run test:run   # Run tests
 ```
 
-## 라이선스
+## License
 
-MIT
+[MIT](LICENSE)

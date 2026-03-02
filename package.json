@@ -28,6 +28,14 @@
   "engines": {
     "node": ">=20.0.0"
   },
-  "author": "",
-  "license": "MIT"
+  "author": "koh0001 (Kim Ock Hyun)",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/koh0001/cc-team-viewer.git"
+  },
+  "homepage": "https://github.com/koh0001/cc-team-viewer#readme",
+  "bugs": {
+    "url": "https://github.com/koh0001/cc-team-viewer/issues"
+  }
 }

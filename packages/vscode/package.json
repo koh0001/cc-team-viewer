@@ -9,6 +9,7 @@
   },
   "categories": ["Other"],
   "activationEvents": [
+    "onView:ccTeamViewer.treeView",
     "workspaceContains:**/.claude"
   ],
   "main": "./dist/extension.js",
@@ -16,11 +17,17 @@
     "commands": [
       {
         "command": "ccTeamViewer.openDashboard",
-        "title": "CC Team Viewer: 대시보드 열기"
+        "title": "CC Team Viewer: Open Dashboard",
+        "icon": "$(telescope)"
       },
       {
         "command": "ccTeamViewer.refresh",
-        "title": "CC Team Viewer: 새로고침"
+        "title": "CC Team Viewer: Refresh",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "ccTeamViewer.selectTeam",
+        "title": "CC Team Viewer: Select Team"
       }
     ],
     "viewsContainers": {
@@ -35,9 +42,22 @@
     "views": {
       "cc-team-viewer": [
         {
-          "type": "webview",
-          "id": "ccTeamViewer.dashboard",
-          "name": "Agent Teams"
+          "id": "ccTeamViewer.treeView",
+          "name": "Teams"
+        }
+      ]
+    },
+    "menus": {
+      "view/title": [
+        {
+          "command": "ccTeamViewer.openDashboard",
+          "when": "view == ccTeamViewer.treeView",
+          "group": "navigation"
+        },
+        {
+          "command": "ccTeamViewer.refresh",
+          "when": "view == ccTeamViewer.treeView",
+          "group": "navigation"
         }
       ]
     }
@@ -45,8 +65,18 @@
   "scripts": {
     "build": "tsup",
     "dev": "tsup --watch",
-    "package": "vsce package"
+    "package": "vsce package --no-dependencies"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/koh0001/cc-team-viewer.git",
+    "directory": "packages/vscode"
+  },
+  "homepage": "https://github.com/koh0001/cc-team-viewer#readme",
+  "bugs": {
+    "url": "https://github.com/koh0001/cc-team-viewer/issues"
+  },
+  "license": "MIT",
   "dependencies": {
     "@cc-team-viewer/core": "*"
   },
