@@ -6,4 +6,5 @@ export default defineConfig({
   clean: true,
   sourcemap: true,
   external: ["vscode"],
+  noExternal: ["@cc-team-viewer/core"], // ESM core를 CJS 번들에 인라인
 });

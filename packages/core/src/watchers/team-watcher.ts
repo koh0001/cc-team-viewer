@@ -86,11 +86,13 @@ export class TeamWatcher extends EventEmitter {
     const tasksExists = await directoryExists(this.tasksDir);
 
     if (!teamsExists && !tasksExists) {
+      const i18n = await import("../i18n/index.js");
+      const { t } = i18n.createI18n();
       this.emit(
         "error",
         new Error(
-          `Claude 디렉토리를 찾을 수 없습니다: ${this.options.claudeDir}\n` +
-            `Agent Teams가 활성화되어 있는지 확인해주세요.`,
+          `${t("error.claudeDirNotFound", { path: this.options.claudeDir })}\n` +
+            t("error.agentTeamsNotActive"),
         ),
         "start",
       );

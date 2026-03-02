@@ -3,22 +3,30 @@
  */
 import React from "react";
 import { Text, Box } from "ink";
-import type { TaskStatus } from "@cc-team-viewer/core";
+import type { TaskStatus, TranslateFn } from "@cc-team-viewer/core";
 
-/** 태스크 상태별 색상과 라벨 */
-const STATUS_CONFIG: Record<TaskStatus, { label: string; color: string }> = {
-  completed: { label: "완료", color: "green" },
-  in_progress: { label: "진행중", color: "yellow" },
-  pending: { label: "대기", color: "gray" },
+/** 상태별 색상 매핑 */
+const STATUS_COLORS: Record<TaskStatus, string> = {
+  completed: "green",
+  in_progress: "yellow",
+  pending: "gray",
+};
+
+/** 상태별 번역 키 매핑 */
+const STATUS_KEYS: Record<TaskStatus, "status.completed" | "status.inProgress" | "status.pending"> = {
+  completed: "status.completed",
+  in_progress: "status.inProgress",
+  pending: "status.pending",
 };
 
 /** 상태 뱃지 */
-export function StatusBadge({ status }: { status: TaskStatus }) {
-  const cfg = STATUS_CONFIG[status] ?? STATUS_CONFIG.pending;
+export function StatusBadge({ status, t }: { status: TaskStatus; t: TranslateFn }) {
+  const color = STATUS_COLORS[status] ?? STATUS_COLORS.pending;
+  const label = t(STATUS_KEYS[status] ?? STATUS_KEYS.pending);
   return (
-    <Text color={cfg.color}>
+    <Text color={color}>
       {status === "in_progress" ? "●" : status === "completed" ? "✓" : "○"}{" "}
-      {cfg.label}
+      {label}
     </Text>
   );
 }
@@ -48,22 +56,22 @@ export function ProgressBar({
 }
 
 /** 경과 시간 포맷 */
-export function formatDuration(ms: number): string {
+export function formatDuration(ms: number, t: TranslateFn): string {
   const seconds = Math.floor(ms / 1000);
-  if (seconds < 60) return `${seconds}초`;
+  if (seconds < 60) return t("duration.seconds", { count: seconds });
   const minutes = Math.floor(seconds / 60);
-  if (minutes < 60) return `${minutes}분`;
+  if (minutes < 60) return t("duration.minutes", { count: minutes });
   const hours = Math.floor(minutes / 60);
   const remainMin = minutes % 60;
-  return `${hours}시간 ${remainMin}분`;
+  return t("duration.hoursMinutes", { hours, minutes: remainMin });
 }
 
 /** 상대 시간 포맷 */
-export function timeAgo(timestamp: number): string {
+export function timeAgo(timestamp: number, t: TranslateFn): string {
   const diff = Date.now() - timestamp;
-  if (diff < 60000) return `${Math.floor(diff / 1000)}초 전`;
-  if (diff < 3600000) return `${Math.floor(diff / 60000)}분 전`;
-  return `${Math.floor(diff / 3600000)}시간 전`;
+  if (diff < 60000) return t("timeAgo.seconds", { count: Math.floor(diff / 1000) });
+  if (diff < 3600000) return t("timeAgo.minutes", { count: Math.floor(diff / 60000) });
+  return t("timeAgo.hours", { count: Math.floor(diff / 3600000) });
 }
 
 /** 구분선 */

@@ -3,11 +3,11 @@
  */
 import React from "react";
 import { Text, Box } from "ink";
-import type { AgentStatus } from "@cc-team-viewer/core";
+import type { AgentStatus, TranslateFn } from "@cc-team-viewer/core";
 import { StatusBadge, ProgressBar } from "./common.js";
 
 /** 단일 에이전트 카드 */
-function AgentCard({ agent }: { agent: AgentStatus }) {
+function AgentCard({ agent, t }: { agent: AgentStatus; t: TranslateFn }) {
   const { member, activeTasks, completedTasks, allTasks, isIdle } = agent;
   const isLead = member.agentType === "team-lead";
   const icon = isLead ? "👑" : isIdle ? "💤" : "⚡";
@@ -40,7 +40,7 @@ function AgentCard({ agent }: { agent: AgentStatus }) {
       {/* 태스크 진행률 */}
       <Box marginTop={0}>
         <Text color="gray">
-          {"  "}태스크: {completedTasks.length}/{allTasks.length} 완료
+          {"  "}{t("agent.taskProgress", { completed: completedTasks.length, total: allTasks.length })}
         </Text>
       </Box>
     </Box>
@@ -48,15 +48,15 @@ function AgentCard({ agent }: { agent: AgentStatus }) {
 }
 
 /** 에이전트 목록 패널 */
-export function AgentPanel({ agents }: { agents: AgentStatus[] }) {
+export function AgentPanel({ agents, t }: { agents: AgentStatus[]; t: TranslateFn }) {
   if (agents.length === 0) {
-    return <Text color="gray">에이전트 없음</Text>;
+    return <Text color="gray">{t("agent.noAgents")}</Text>;
   }
 
   return (
     <Box flexDirection="column">
       {agents.map((agent) => (
-        <AgentCard key={agent.member.name} agent={agent} />
+        <AgentCard key={agent.member.name} agent={agent} t={t} />
       ))}
     </Box>
   );

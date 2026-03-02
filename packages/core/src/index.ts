@@ -53,3 +53,21 @@ export {
 
 // 감시자 내보내기
 export { TeamWatcher } from "./watchers/team-watcher.js";
+
+// i18n 내보내기
+export {
+  createI18n,
+  interpolate,
+  detectLocale,
+  LOCALE_ORDER,
+  LOCALE_NAMES,
+} from "./i18n/index.js";
+
+export type {
+  Locale,
+  TranslationMap,
+  TranslationKey,
+  InterpolationParams,
+  TranslateFn,
+  I18nInstance,
+} from "./i18n/index.js";

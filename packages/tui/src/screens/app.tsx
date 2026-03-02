@@ -4,12 +4,13 @@
  * 키보드 조작:
  *   Tab        → 뷰 전환 (개요/태스크/메시지/의존성)
  *   ↑/↓       → 팀 선택
+ *   L          → 언어 전환 (ko → en → ja → zh)
  *   q / Ctrl+C → 종료
  */
 import React, { useState, useEffect, useCallback } from "react";
 import { Text, Box, useApp, useInput } from "ink";
 import { TeamWatcher } from "@cc-team-viewer/core";
-import type { TeamSnapshot } from "@cc-team-viewer/core";
+import type { TeamSnapshot, TranslationKey } from "@cc-team-viewer/core";
 import { AgentPanel } from "../components/agent-panel.js";
 import { TaskBoard, DependencyGraph } from "../components/task-board.js";
 import { MessageLog } from "../components/message-log.js";
@@ -18,13 +19,15 @@ import {
   SectionHeader,
   formatDuration,
 } from "../components/common.js";
+import { useI18n } from "../i18n/context.js";
 
 type ViewMode = "overview" | "tasks" | "messages" | "deps";
-const VIEW_LABELS: Record<ViewMode, string> = {
-  overview: "개요",
-  tasks: "태스크",
-  messages: "메시지",
-  deps: "의존성",
+
+const VIEW_KEYS: Record<ViewMode, TranslationKey> = {
+  overview: "view.overview",
+  tasks: "view.tasks",
+  messages: "view.messages",
+  deps: "view.deps",
 };
 const VIEW_ORDER: ViewMode[] = ["overview", "tasks", "messages", "deps"];
 
@@ -35,6 +38,7 @@ interface AppProps {
 
 export function App({ claudeDir, teamFilter }: AppProps) {
   const { exit } = useApp();
+  const { t, locale, cycleLocale, localeName } = useI18n();
   const [snapshots, setSnapshots] = useState<Map<string, TeamSnapshot>>(new Map());
   const [selectedTeam, setSelectedTeam] = useState<string>("");
   const [viewMode, setViewMode] = useState<ViewMode>("overview");
@@ -71,7 +75,7 @@ export function App({ claudeDir, teamFilter }: AppProps) {
     });
 
     watcher.start().catch((err) => {
-      setError(`시작 실패: ${(err as Error).message}`);
+      setError(t("error.startFailed", { message: (err as Error).message }));
     });
 
     return () => {
@@ -90,6 +94,12 @@ export function App({ claudeDir, teamFilter }: AppProps) {
   useInput((input, key) => {
     if (input === "q") {
       exit();
+      return;
+    }
+
+    // L → 언어 전환
+    if (input === "L" || input === "l") {
+      cycleLocale();
       return;
     }
 
@@ -129,11 +139,11 @@ export function App({ claudeDir, teamFilter }: AppProps) {
       {/* 헤더 */}
       <Box justifyContent="space-between">
         <Text bold>
-          🔭 <Text color="cyan">CC Team Viewer</Text>
-          <Text color="gray"> — Claude Code Agent Teams Monitor</Text>
+          🔭 <Text color="cyan">{t("app.title")}</Text>
+          <Text color="gray"> — {t("app.subtitle")}</Text>
         </Text>
         <Text color="gray">
-          {new Date(lastUpdate).toLocaleTimeString("ko-KR")} · q: 종료
+          {new Date(lastUpdate).toLocaleTimeString()} · {localeName} · q: {t("app.quit")}
         </Text>
       </Box>
 
@@ -147,12 +157,12 @@ export function App({ claudeDir, teamFilter }: AppProps) {
       {/* 팀이 없을 때 */}
       {snapshots.size === 0 && !error && (
         <Box flexDirection="column" marginTop={2} alignItems="center">
-          <Text color="yellow">⏳ Agent Teams를 감시 중...</Text>
+          <Text color="yellow">⏳ {t("app.watching")}</Text>
           <Text color="gray" italic>
-            {"\n"}Claude Code에서 Agent Team을 생성하면 여기에 표시됩니다.
+            {"\n"}{t("app.watchingHint")}
           </Text>
           <Text color="gray" italic>
-            감시 경로: {claudeDir ?? "~/.claude"}/teams/
+            {t("app.watchingPath", { path: claudeDir ?? "~/.claude" })}
           </Text>
         </Box>
       )}
@@ -161,7 +171,7 @@ export function App({ claudeDir, teamFilter }: AppProps) {
         <Box marginTop={1}>
           {/* 사이드바: 팀 목록 */}
           <Box flexDirection="column" width={28} marginRight={2}>
-            <Text bold color="gray">팀 목록 (↑↓)</Text>
+            <Text bold color="gray">{t("sidebar.teamList")}</Text>
             <Text color="gray">{"─".repeat(26)}</Text>
             {[...snapshots.entries()].map(([name, snap]) => (
               <Box key={name}>
@@ -189,7 +199,7 @@ export function App({ claudeDir, teamFilter }: AppProps) {
                   <Text bold color="white">{snapshot.config.name}</Text>
                   <Text color="gray"> — {snapshot.config.description}</Text>
                 </Box>
-                <Text color="gray">{formatDuration(snapshot.stats.uptime)} 경과</Text>
+                <Text color="gray">{formatDuration(snapshot.stats.uptime, t)} {t("stats.elapsed")}</Text>
               </Box>
 
               {/* 진행률 바 */}
@@ -201,12 +211,12 @@ export function App({ claudeDir, teamFilter }: AppProps) {
                 />
                 <Text color="green">{snapshot.stats.completedTasks}</Text>
                 <Text color="gray">/</Text>
-                <Text>{snapshot.stats.totalTasks} 태스크</Text>
+                <Text>{snapshot.stats.totalTasks} {t("stats.tasks")}</Text>
                 <Text color="gray">·</Text>
                 <Text color="cyan">{snapshot.stats.activeAgents}</Text>
-                <Text color="gray">/{snapshot.stats.totalAgents} 활성</Text>
+                <Text color="gray">/{snapshot.stats.totalAgents} {t("stats.active")}</Text>
                 <Text color="gray">·</Text>
-                <Text color="gray">{snapshot.stats.totalMessages} 메시지</Text>
+                <Text color="gray">{snapshot.stats.totalMessages} {t("stats.messages")}</Text>
               </Box>
 
               {/* 탭 네비게이션 */}
@@ -218,11 +228,11 @@ export function App({ claudeDir, teamFilter }: AppProps) {
                     bold={viewMode === v}
                     underline={viewMode === v}
                   >
-                    [{i + 1}] {VIEW_LABELS[v]}
+                    [{i + 1}] {t(VIEW_KEYS[v])}
                   </Text>
                 ))}
                 <Text color="gray" italic>
-                  {"  "}(Tab으로 전환)
+                  {"  "}{t("view.tabHint")}
                 </Text>
               </Box>
 
@@ -230,8 +240,8 @@ export function App({ claudeDir, teamFilter }: AppProps) {
               <Box marginTop={1} flexDirection="column">
                 {viewMode === "overview" && (
                   <>
-                    <SectionHeader title={`에이전트 (${snapshot.agents.length})`} />
-                    <AgentPanel agents={snapshot.agents} />
+                    <SectionHeader title={t("agent.sectionTitle", { count: snapshot.agents.length })} />
+                    <AgentPanel agents={snapshot.agents} t={t} />
                   </>
                 )}
 
@@ -239,6 +249,7 @@ export function App({ claudeDir, teamFilter }: AppProps) {
                   <TaskBoard
                     tasks={snapshot.tasks}
                     members={snapshot.config.members}
+                    t={t}
                   />
                 )}
 
@@ -246,12 +257,13 @@ export function App({ claudeDir, teamFilter }: AppProps) {
                   <MessageLog
                     messages={snapshot.messages}
                     members={snapshot.config.members}
+                    t={t}
                   />
                 )}
 
                 {viewMode === "deps" && (
                   <>
-                    <SectionHeader title="태스크 의존성 그래프" />
+                    <SectionHeader title={t("deps.sectionTitle")} />
                     <DependencyGraph tasks={snapshot.tasks} />
                   </>
                 )}

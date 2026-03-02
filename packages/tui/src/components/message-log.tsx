@@ -3,18 +3,19 @@
  */
 import React from "react";
 import { Text, Box } from "ink";
-import type { InboxMessage, TeamMember } from "@cc-team-viewer/core";
+import type { InboxMessage, TeamMember, TranslateFn } from "@cc-team-viewer/core";
 import { timeAgo } from "./common.js";
 
 /** 단일 메시지 */
 function MessageRow({
   message,
   members,
+  t,
 }: {
   message: InboxMessage;
   members: TeamMember[];
+  t: TranslateFn;
 }) {
-  const sender = members.find((m) => m.name === message.from);
   const isSystem =
     message.type === "idle_notification" ||
     message.type === "shutdown_request" ||
@@ -23,7 +24,7 @@ function MessageRow({
   if (isSystem) {
     return (
       <Text color="gray" italic>
-        {"  "}[{message.type}] {message.from} → {message.to} ({timeAgo(message.timestamp)})
+        {"  "}[{message.type}] {message.from} → {message.to} ({timeAgo(message.timestamp, t)})
       </Text>
     );
   }
@@ -43,7 +44,7 @@ function MessageRow({
         <Text wrap="truncate-end">{message.content}</Text>
       </Box>
       <Box width={8} justifyContent="flex-end">
-        <Text color="gray">{timeAgo(message.timestamp)}</Text>
+        <Text color="gray">{timeAgo(message.timestamp, t)}</Text>
       </Box>
     </Box>
   );
@@ -54,13 +55,15 @@ export function MessageLog({
   messages,
   members,
   maxMessages = 20,
+  t,
 }: {
   messages: InboxMessage[];
   members: TeamMember[];
   maxMessages?: number;
+  t: TranslateFn;
 }) {
   if (messages.length === 0) {
-    return <Text color="gray">메시지 없음</Text>;
+    return <Text color="gray">{t("message.noMessages")}</Text>;
   }
 
   // 최근 메시지만 표시
@@ -70,21 +73,21 @@ export function MessageLog({
     <Box flexDirection="column">
       {/* 헤더 */}
       <Box>
-        <Box width={16}><Text bold color="gray">발신</Text></Box>
+        <Box width={16}><Text bold color="gray">{t("message.headerFrom")}</Text></Box>
         <Text color="gray">  </Text>
-        <Box width={16}><Text bold color="gray">수신</Text></Box>
-        <Box flexGrow={1}><Text bold color="gray">내용</Text></Box>
-        <Box width={8} justifyContent="flex-end"><Text bold color="gray">시간</Text></Box>
+        <Box width={16}><Text bold color="gray">{t("message.headerTo")}</Text></Box>
+        <Box flexGrow={1}><Text bold color="gray">{t("message.headerContent")}</Text></Box>
+        <Box width={8} justifyContent="flex-end"><Text bold color="gray">{t("message.headerTime")}</Text></Box>
       </Box>
       <Text color="gray">{"─".repeat(70)}</Text>
 
       {recent.map((msg, i) => (
-        <MessageRow key={i} message={msg} members={members} />
+        <MessageRow key={i} message={msg} members={members} t={t} />
       ))}
 
       {messages.length > maxMessages && (
         <Text color="gray" italic>
-          {"  "}... {messages.length - maxMessages}개 이전 메시지 생략
+          {"  "}{t("message.olderOmitted", { count: messages.length - maxMessages })}
         </Text>
       )}
     </Box>

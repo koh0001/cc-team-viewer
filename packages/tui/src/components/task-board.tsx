@@ -3,11 +3,11 @@
  */
 import React from "react";
 import { Text, Box } from "ink";
-import type { Task, TeamMember } from "@cc-team-viewer/core";
+import type { Task, TeamMember, TranslateFn } from "@cc-team-viewer/core";
 import { StatusBadge } from "./common.js";
 
 /** 태스크 한 줄 */
-function TaskRow({ task, members }: { task: Task; members: TeamMember[] }) {
+function TaskRow({ task, members, t }: { task: Task; members: TeamMember[]; t: TranslateFn }) {
   const owner = members.find((m) => m.name === task.owner);
   const blockedStr =
     task.blockedBy?.length > 0 && task.status === "pending"
@@ -42,12 +42,12 @@ function TaskRow({ task, members }: { task: Task; members: TeamMember[] }) {
           <Text color="cyan">{owner.name}</Text>
         ) : (
           <Text color="gray" italic>
-            미할당
+            {t("task.unassigned")}
           </Text>
         )}
       </Box>
       <Box width={10} justifyContent="flex-end">
-        <StatusBadge status={task.status} />
+        <StatusBadge status={task.status} t={t} />
       </Box>
     </Box>
   );
@@ -57,29 +57,31 @@ function TaskRow({ task, members }: { task: Task; members: TeamMember[] }) {
 export function TaskBoard({
   tasks,
   members,
+  t,
 }: {
   tasks: Task[];
   members: TeamMember[];
+  t: TranslateFn;
 }) {
   if (tasks.length === 0) {
-    return <Text color="gray">태스크 없음</Text>;
+    return <Text color="gray">{t("task.noTasks")}</Text>;
   }
 
   return (
     <Box flexDirection="column">
       {/* 헤더 */}
       <Box>
-        <Box width={4}><Text bold color="gray">ID</Text></Box>
+        <Box width={4}><Text bold color="gray">{t("task.headerId")}</Text></Box>
         <Box width={3} />
-        <Box flexGrow={1}><Text bold color="gray">태스크</Text></Box>
-        <Box width={16} justifyContent="flex-end"><Text bold color="gray">담당</Text></Box>
-        <Box width={10} justifyContent="flex-end"><Text bold color="gray">상태</Text></Box>
+        <Box flexGrow={1}><Text bold color="gray">{t("task.headerTask")}</Text></Box>
+        <Box width={16} justifyContent="flex-end"><Text bold color="gray">{t("task.headerOwner")}</Text></Box>
+        <Box width={10} justifyContent="flex-end"><Text bold color="gray">{t("task.headerStatus")}</Text></Box>
       </Box>
       <Text color="gray">{"─".repeat(70)}</Text>
 
       {/* 태스크 목록 */}
       {tasks.map((task) => (
-        <TaskRow key={task.id} task={task} members={members} />
+        <TaskRow key={task.id} task={task} members={members} t={t} />
       ))}
     </Box>
   );
@@ -88,7 +90,7 @@ export function TaskBoard({
 /** 의존성 그래프 (ASCII) */
 export function DependencyGraph({ tasks }: { tasks: Task[] }) {
   if (tasks.length === 0) {
-    return <Text color="gray">태스크 없음</Text>;
+    return <Text color="gray">-</Text>;
   }
 
   // 간단한 ASCII 의존성 표시
