@@ -1,0 +1,33 @@
+{
+  "name": "cc-team-viewer",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Claude Code Agent Teams 실시간 모니터링 도구",
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "build": "npm run build --workspaces",
+    "build:core": "npm run build -w @cc-team-viewer/core",
+    "build:tui": "npm run build -w @cc-team-viewer/tui",
+    "build:vscode": "npm run build -w @cc-team-viewer/vscode",
+    "dev": "npm run dev -w @cc-team-viewer/tui",
+    "tui": "node packages/tui/dist/index.js",
+    "test": "vitest",
+    "test:run": "vitest run",
+    "lint": "eslint packages/*/src/**/*.ts",
+    "clean": "rm -rf packages/*/dist"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "eslint": "^9.0.0",
+    "tsup": "^8.0.0",
+    "typescript": "^5.6.0",
+    "vitest": "^2.0.0"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "author": "",
+  "license": "MIT"
+}

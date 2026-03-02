@@ -1,0 +1,29 @@
+{
+  "name": "@cc-team-viewer/tui",
+  "version": "0.1.0",
+  "description": "CC Team Viewer 터미널 UI (ink 기반)",
+  "type": "module",
+  "main": "./dist/index.js",
+  "bin": {
+    "cc-team-viewer": "./dist/index.js"
+  },
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "start": "node dist/index.js"
+  },
+  "dependencies": {
+    "@cc-team-viewer/core": "*",
+    "ink": "^5.1.0",
+    "ink-big-text": "^2.0.0",
+    "ink-spinner": "^5.0.0",
+    "react": "^18.3.0",
+    "meow": "^13.0.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.0",
+    "tsup": "^8.0.0",
+    "typescript": "^5.6.0"
+  },
+  "files": ["dist"]
+}

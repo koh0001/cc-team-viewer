@@ -1,0 +1,59 @@
+{
+  "name": "cc-team-viewer-vscode",
+  "displayName": "CC Team Viewer",
+  "description": "Claude Code Agent Teams 실시간 모니터링 — VS Code 확장",
+  "version": "0.1.0",
+  "publisher": "cc-team-viewer",
+  "engines": {
+    "vscode": "^1.90.0"
+  },
+  "categories": ["Other"],
+  "activationEvents": [
+    "workspaceContains:**/.claude"
+  ],
+  "main": "./dist/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "ccTeamViewer.openDashboard",
+        "title": "CC Team Viewer: 대시보드 열기"
+      },
+      {
+        "command": "ccTeamViewer.refresh",
+        "title": "CC Team Viewer: 새로고침"
+      }
+    ],
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "cc-team-viewer",
+          "title": "CC Team Viewer",
+          "icon": "$(telescope)"
+        }
+      ]
+    },
+    "views": {
+      "cc-team-viewer": [
+        {
+          "type": "webview",
+          "id": "ccTeamViewer.dashboard",
+          "name": "Agent Teams"
+        }
+      ]
+    }
+  },
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "package": "vsce package"
+  },
+  "dependencies": {
+    "@cc-team-viewer/core": "*"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.90.0",
+    "@vscode/vsce": "^3.0.0",
+    "tsup": "^8.0.0",
+    "typescript": "^5.6.0"
+  }
+}
