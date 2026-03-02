@@ -58,7 +58,7 @@ export class DashboardProvider implements vscode.Disposable {
       {
         enableScripts: true,
         retainContextWhenHidden: true,
-        localResourceRoots: [this.extensionUri],
+        localResourceRoots: [],
       },
     );
 
