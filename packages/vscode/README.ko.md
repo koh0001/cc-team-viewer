@@ -4,43 +4,73 @@
 
 [English](README.md) | [日本語](README.ja.md) | [中文](README.zh.md)
 
+![개요](images/screenshot-overview.png)
+
+## CC Team Viewer란?
+
+[Claude Code Agent Teams](https://docs.anthropic.com/en/docs/claude-code/agent-teams)를 실행하면 여러 AI 에이전트가 태스크를 병렬로 처리합니다. CC Team Viewer는 에이전트들의 진행 상황을 실시간으로 모니터링할 수 있는 대시보드를 제공합니다 — 어떤 에이전트가 활성 상태인지, 어떤 태스크를 진행 중인지, 에이전트 간 어떤 대화가 오가는지 한눈에 파악할 수 있습니다.
+
 ## 기능
 
-- **WebView 대시보드** — 개요, 태스크, 메시지, 의존성 탭
-- **트리뷰 사이드바** — 활동 바에서 팀 > 에이전트 > 태스크 계층 구조
-- **상태 바** — 태스크 완료 진행률을 한눈에
-- **팀 pill 전환** — 원클릭으로 빠른 팀 전환
-- **에이전트 펄스 애니메이션** — 활성 에이전트 시각적 표시
-- **실시간 업데이트** — 팀 파일 변경 시 자동 갱신
-- **테마 통합** — VS Code 테마에 맞게 적용 (라이트/다크/하이 콘트라스트)
+### WebView 대시보드
+4개 탭으로 구성된 인터랙티브 대시보드:
+
+| 탭 | 설명 |
+|----|------|
+| **Overview** | 에이전트 카드 — 상태, 진행 중인 태스크, 진행률 |
+| **Tasks** | 전체 태스크 테이블 — 상태 표시기, 담당자 |
+| **Messages** | 에이전트 간 실시간 메시지 로그 |
+| **Deps** | 태스크 의존성 그래프 시각화 |
+
+![태스크](images/screenshot-tasks.png)
+
+![메시지](images/screenshot-messages.png)
+
+### 트리뷰 사이드바
+활동 바에서 **팀 > 에이전트 > 태스크** 계층 구조로 탐색. 항목 클릭 시 바로 이동.
+
+### 상태 바
+항상 표시되는 진행률 요약: `refactor-auth 62% (5/8)` — 클릭하면 대시보드 열기.
+
+### 다국어 지원
+대시보드 UI를 4개 언어로 제공: 한국어, English, 日本語, 中文
+- `설정 > CC Team Viewer > Language`에서 변경
+- 또는 대시보드 헤더의 언어 버튼을 클릭하여 순환 전환
+
+### 추가 기능
+- **팀 pill 전환** — 여러 팀 동시 모니터링 시 빠른 전환
+- **에이전트 펄스 애니메이션** — 작업 중인 에이전트 시각적 표시
+- **실시간 업데이트** — 1초 간격 자동 폴링, 수동 새로고침 불필요
+- **테마 통합** — VS Code 테마에 맞게 자동 적용 (라이트/다크/하이 콘트라스트)
 
 ## 설치
+
+### VS Code 마켓플레이스에서 설치
+
+확장 패널에서 **"CC Team Viewer"** 검색, 또는:
+
+```
+ext install koh-dev.cc-team-viewer-vscode
+```
 
 ### .vsix 파일로 설치
 
 ```bash
-# 소스에서 빌드
 git clone https://github.com/koh0001/cc-team-viewer.git
 cd cc-team-viewer
-npm install
-npm run build
-cd packages/vscode
-npm run package
-code --install-extension cc-team-viewer-*.vsix
+npm install && npm run build
+cd packages/vscode && npm run package
+code --install-extension cc-team-viewer-vscode-*.vsix
 ```
-
-### 소스에서 실행 (개발용)
-
-1. VS Code에서 모노레포를 열기
-2. `F5`를 눌러 Extension Development Host 실행
-3. 활동 바에 CC Team Viewer 패널이 나타남
 
 ## 사용법
 
-1. 터미널에서 Claude Code Agent Team을 시작
-2. VS Code를 열면 `~/.claude/` 감지 시 확장이 자동 활성화
-3. 활동 바의 망원경 아이콘을 클릭하여 트리뷰 열기
-4. 대시보드 아이콘을 클릭하여 WebView 대시보드 열기
+1. 터미널에서 Claude Code Agent Team 시작
+2. VS Code를 열면 `~/.claude/` 감지 시 확장 자동 활성화
+3. 활동 바의 **망원경 아이콘**을 클릭하여 트리뷰 열기
+4. **대시보드 아이콘**을 클릭하여 WebView 대시보드 열기
+
+> `~/.claude/teams/`와 `~/.claude/tasks/` 디렉토리의 변경을 자동 감시합니다. 별도 설정 불필요.
 
 ## 커맨드
 
@@ -52,10 +82,15 @@ code --install-extension cc-team-viewer-*.vsix
 
 커맨드 팔레트(`Ctrl+Shift+P` / `Cmd+Shift+P`)에서 접근 가능.
 
+## 설정
+
+| 설정 | 기본값 | 설명 |
+|------|--------|------|
+| `ccTeamViewer.language` | `auto` | 대시보드 언어 (`auto`, `ko`, `en`, `ja`, `zh`) |
+
 ## 요구 사항
 
 - VS Code 1.90+
-- Node.js 20+
 - Claude Code (Agent Teams 활성화)
 
 ## 라이선스

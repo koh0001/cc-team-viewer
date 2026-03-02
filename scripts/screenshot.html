@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    /* VS Code Dark+ 테마 변수 시뮬레이션 */
+    :root {
+      --vscode-font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      --vscode-font-size: 13px;
+      --vscode-foreground: #cccccc;
+      --vscode-editor-background: #1e1e1e;
+      --vscode-widget-border: #303030;
+      --vscode-editorWidget-background: #252526;
+      --vscode-descriptionForeground: #858585;
+      --vscode-focusBorder: #007fd4;
+      --vscode-badge-background: #4d4d4d;
+      --vscode-badge-foreground: #ffffff;
+      --vscode-progressBar-background: #0e70c0;
+      --vscode-charts-green: #89d185;
+      --vscode-charts-yellow: #cca700;
+      --vscode-textLink-foreground: #3794ff;
+      --vscode-inputValidation-errorBackground: #5a1d1d;
+      --vscode-inputValidation-errorForeground: #f48771;
+      --overlay-subtle: rgba(255,255,255,0.03);
+      --overlay-light: rgba(255,255,255,0.05);
+      --overlay-medium: rgba(255,255,255,0.08);
+      --overlay-strong: rgba(255,255,255,0.12);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: var(--vscode-font-family);
+      font-size: var(--vscode-font-size);
+      color: var(--vscode-foreground);
+      background: var(--vscode-editor-background);
+      padding: 16px 20px;
+      line-height: 1.5;
+      width: 800px;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes pulse-border {
+      0%, 100% { border-left-color: var(--agent-color, var(--vscode-focusBorder)); }
+      50% { border-left-color: transparent; }
+    }
+
+    .header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding-bottom: 10px; border-bottom: 1px solid var(--vscode-widget-border); margin-bottom: 14px;
+    }
+    .header-title { display: flex; align-items: center; gap: 8px; font-weight: bold; font-size: 1.1em; }
+    .header.no-border { border-bottom: none; margin-bottom: 0; }
+    .lang-btn {
+      background: var(--vscode-editorWidget-background); color: var(--vscode-descriptionForeground);
+      border: 1px solid var(--vscode-widget-border); border-radius: 4px;
+      padding: 3px 10px; font-size: 11px; cursor: pointer;
+    }
+
+    .team-pills { display: none; gap: 6px; padding-bottom: 10px; border-bottom: 1px solid var(--vscode-widget-border); margin-bottom: 4px; overflow-x: auto; }
+    .team-pills.visible { display: flex; }
+    .team-pill {
+      flex-shrink: 0; background: var(--vscode-editorWidget-background); color: var(--vscode-descriptionForeground);
+      border: 1px solid var(--vscode-widget-border); border-radius: 14px; padding: 4px 14px; font-size: 12px; cursor: pointer;
+    }
+    .team-pill.active { background: var(--vscode-badge-background); color: var(--vscode-badge-foreground); border-color: var(--vscode-badge-background); font-weight: 600; }
+
+    .stats-bar { display: flex; align-items: center; gap: 12px; padding: 10px 0; font-size: 12px; color: var(--vscode-descriptionForeground); }
+    .progress-container { flex: 1; max-width: 150px; height: 6px; background: var(--vscode-editorWidget-background); border-radius: 3px; overflow: hidden; }
+    .progress-fill { height: 100%; background: linear-gradient(90deg, var(--vscode-progressBar-background), var(--vscode-charts-green)); border-radius: 3px; }
+    .stat-badge { background: var(--vscode-badge-background); color: var(--vscode-badge-foreground); padding: 2px 8px; border-radius: 8px; font-size: 11px; font-weight: 500; }
+
+    .tab-bar { display: flex; gap: 0; border-bottom: 1px solid var(--vscode-widget-border); margin: 10px 0; }
+    .tab-btn { background: none; border: none; color: var(--vscode-descriptionForeground); padding: 8px 16px; cursor: pointer; font-size: 12px; border-bottom: 2px solid transparent; }
+    .tab-btn.active { color: var(--vscode-foreground); border-bottom-color: var(--vscode-focusBorder); font-weight: bold; }
+
+    .tab-content { display: none; }
+    .tab-content.active { display: block; animation: fadeIn 0.15s ease-out; }
+
+    .agent-card {
+      border: 1px solid var(--vscode-widget-border); border-left: 3px solid var(--agent-color, var(--vscode-focusBorder));
+      border-radius: 6px; padding: 12px 16px; margin-bottom: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+    }
+    .agent-card.agent-active { animation: pulse-border 2s ease-in-out infinite; }
+    .agent-header { display: flex; justify-content: space-between; align-items: center; }
+    .agent-name { font-weight: bold; font-size: 13px; }
+    .agent-meta { font-size: 11px; color: var(--vscode-descriptionForeground); }
+    .agent-task { font-size: 12px; color: var(--vscode-charts-yellow); padding-left: 16px; margin-top: 4px; }
+    .agent-progress { font-size: 11px; color: var(--vscode-descriptionForeground); padding-left: 16px; margin-top: 4px; }
+
+    .task-table { width: 100%; font-size: 12px; border-collapse: collapse; }
+    .task-table th { text-align: left; color: var(--vscode-descriptionForeground); padding: 6px 10px; border-bottom: 1px solid var(--vscode-widget-border); font-weight: 600; font-size: 11px; text-transform: uppercase; letter-spacing: 0.3px; background: var(--overlay-subtle); }
+    .task-table td { padding: 6px 10px; }
+    .task-table tbody tr:nth-child(even) { background: var(--overlay-subtle); }
+    .task-table tr.completed td { opacity: 0.5; text-decoration: line-through; }
+    .task-status { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 4px; }
+    .task-status.completed { background: var(--vscode-charts-green); box-shadow: 0 0 4px var(--vscode-charts-green); }
+    .task-status.in_progress { background: var(--vscode-charts-yellow); box-shadow: 0 0 4px var(--vscode-charts-yellow); }
+    .task-status.pending { background: var(--vscode-descriptionForeground); opacity: 0.4; }
+    .task-owner { color: var(--vscode-textLink-foreground); }
+    .task-unassigned { color: var(--vscode-descriptionForeground); font-style: italic; }
+
+    .message-row { display: flex; gap: 8px; font-size: 12px; padding: 8px 0; border-bottom: 1px solid var(--vscode-widget-border); border-radius: 3px; }
+    .message-row:last-child { border-bottom: none; }
+    .msg-from { color: var(--vscode-textLink-foreground); font-weight: bold; min-width: 80px; max-width: 100px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .msg-arrow { color: var(--vscode-descriptionForeground); }
+    .msg-to { color: var(--vscode-descriptionForeground); min-width: 80px; max-width: 100px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .msg-content { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .msg-time { color: var(--vscode-descriptionForeground); font-size: 11px; min-width: 50px; text-align: right; }
+    .msg-system { color: var(--vscode-descriptionForeground); font-style: italic; font-size: 11px; padding: 4px 0 4px 8px; border-left: 2px solid var(--vscode-widget-border); margin: 2px 0; }
+
+    .dep-line { font-family: monospace; font-size: 12px; padding: 2px 0; border-radius: 3px; }
+    .dep-completed { color: var(--vscode-charts-green); padding-left: 6px; border-left: 2px solid var(--vscode-charts-green); }
+    .dep-in-progress { color: var(--vscode-charts-yellow); padding-left: 6px; border-left: 2px solid var(--vscode-charts-yellow); }
+    .dep-arrow { color: var(--vscode-descriptionForeground); padding-left: 16px; }
+
+    .section-title { font-size: 11px; text-transform: uppercase; color: var(--vscode-descriptionForeground); margin: 16px 0 8px; letter-spacing: 0.5px; font-weight: 600; }
+    .dashboard-hidden { display: none; }
+    .error-bar { display: none; }
+  </style>
+</head>
+<body>
+  <div id="error-bar" class="error-bar"></div>
+  <div id="dashboard">
+    <div id="header" class="header no-border">
+      <span class="header-title">&#x1F52D; CC Team Viewer</span>
+      <button id="lang-btn" class="lang-btn">English ▾</button>
+    </div>
+    <div id="team-pills" class="team-pills visible">
+      <button class="team-pill active">refactor-auth</button>
+      <button class="team-pill">feature-dashboard</button>
+    </div>
+
+    <div class="stats-bar">
+      <div class="progress-container"><div class="progress-fill" id="progress-fill" style="width:62%"></div></div>
+      <span id="stats-text">
+        <span class="stat-badge">5/8 Tasks</span>
+        <span class="stat-badge">3/4 Active</span>
+        <span class="stat-badge">24 Messages</span>
+        <span class="stat-badge">62%</span>
+      </span>
+    </div>
+
+    <div class="tab-bar" id="tab-bar">
+      <button class="tab-btn active" data-tab="overview">Overview</button>
+      <button class="tab-btn" data-tab="tasks">Tasks</button>
+      <button class="tab-btn" data-tab="messages">Messages</button>
+      <button class="tab-btn" data-tab="deps">Deps</button>
+    </div>
+
+    <!-- Overview Tab -->
+    <div id="tab-overview" class="tab-content active">
+      <div class="section-title">AGENTS</div>
+      <div id="overview-content">
+        <div class="agent-card" style="--agent-color: #4A90D9;">
+          <div class="agent-header">
+            <span>&#x1F451; <span class="agent-name">team-lead</span><span class="agent-meta"> (team-lead)</span></span>
+            <span class="agent-meta">opus · in-process</span>
+          </div>
+          <div class="agent-progress">Tasks: 2/2</div>
+        </div>
+        <div class="agent-card agent-active" style="--agent-color: #E74C3C;">
+          <div class="agent-header">
+            <span>&#x26A1; <span class="agent-name">auth-worker</span><span class="agent-meta"> (general-purpose)</span></span>
+            <span class="agent-meta">sonnet · tmux</span>
+          </div>
+          <div class="agent-task">&#x25CF; Implement JWT token refresh logic</div>
+          <div class="agent-progress">Tasks: 1/3</div>
+        </div>
+        <div class="agent-card agent-active" style="--agent-color: #2ECC71;">
+          <div class="agent-header">
+            <span>&#x26A1; <span class="agent-name">api-worker</span><span class="agent-meta"> (general-purpose)</span></span>
+            <span class="agent-meta">sonnet · tmux</span>
+          </div>
+          <div class="agent-task">&#x25CF; Add rate limiting middleware</div>
+          <div class="agent-progress">Tasks: 2/3</div>
+        </div>
+        <div class="agent-card" style="--agent-color: #9B59B6;">
+          <div class="agent-header">
+            <span>&#x1F4A4; <span class="agent-name">test-runner</span><span class="agent-meta"> (general-purpose)</span></span>
+            <span class="agent-meta">haiku · tmux</span>
+          </div>
+          <div class="agent-progress">Tasks: 0/2</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tasks Tab -->
+    <div id="tab-tasks" class="tab-content">
+      <div id="tasks-content">
+        <table class="task-table">
+          <thead><tr><th>ID</th><th></th><th>Task</th><th>Owner</th></tr></thead>
+          <tbody>
+            <tr class="completed"><td>#1</td><td><span class="task-status completed"></span></td><td>Set up project scaffolding</td><td><span class="task-owner">team-lead</span></td></tr>
+            <tr class="completed"><td>#2</td><td><span class="task-status completed"></span></td><td>Design authentication schema</td><td><span class="task-owner">team-lead</span></td></tr>
+            <tr class="completed"><td>#3</td><td><span class="task-status completed"></span></td><td>Create user model and migrations</td><td><span class="task-owner">api-worker</span></td></tr>
+            <tr><td>#4</td><td><span class="task-status in_progress"></span></td><td>Implement JWT token refresh logic</td><td><span class="task-owner">auth-worker</span></td></tr>
+            <tr><td>#5</td><td><span class="task-status in_progress"></span></td><td>Add rate limiting middleware</td><td><span class="task-owner">api-worker</span></td></tr>
+            <tr class="completed"><td>#6</td><td><span class="task-status completed"></span></td><td>Set up Redis cache connection</td><td><span class="task-owner">api-worker</span></td></tr>
+            <tr class="completed"><td>#7</td><td><span class="task-status completed"></span></td><td>Configure CI/CD pipeline</td><td><span class="task-owner">auth-worker</span></td></tr>
+            <tr><td>#8</td><td><span class="task-status pending"></span></td><td>Write E2E tests for auth flow <span style="color:var(--vscode-descriptionForeground)">← #4</span></td><td><span class="task-unassigned">unassigned</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Messages Tab -->
+    <div id="tab-messages" class="tab-content">
+      <div id="messages-content">
+        <div class="msg-system">[idle_notification] test-runner → team-lead</div>
+        <div class="message-row">
+          <span class="msg-from">team-lead</span>
+          <span class="msg-arrow">→</span>
+          <span class="msg-to">auth-worker</span>
+          <span class="msg-content">JWT refresh 구현 시 기존 토큰 블랙리스트 처리도 포함해주세요</span>
+          <span class="msg-time">2m</span>
+        </div>
+        <div class="message-row">
+          <span class="msg-from">auth-worker</span>
+          <span class="msg-arrow">→</span>
+          <span class="msg-to">team-lead</span>
+          <span class="msg-content">네, Redis에 블랙리스트 저장하는 방식으로 진행하겠습니다</span>
+          <span class="msg-time">1m</span>
+        </div>
+        <div class="message-row">
+          <span class="msg-from">api-worker</span>
+          <span class="msg-arrow">→</span>
+          <span class="msg-to">team-lead</span>
+          <span class="msg-content">Rate limiting 미들웨어 완성했습니다. sliding window 알고리즘 적용</span>
+          <span class="msg-time">45s</span>
+        </div>
+        <div class="message-row">
+          <span class="msg-from">team-lead</span>
+          <span class="msg-arrow">→</span>
+          <span class="msg-to">api-worker</span>
+          <span class="msg-content">좋습니다! 테스트 완료되면 test-runner에게 E2E 태스크 할당할게요</span>
+          <span class="msg-time">30s</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Deps Tab -->
+    <div id="tab-deps" class="tab-content">
+      <div class="section-title">DEPENDENCIES</div>
+      <div id="deps-content">
+        <div class="dep-line dep-completed">✓ #1 Set up project scaffolding</div>
+        <div class="dep-line dep-completed">✓ #2 Design authentication schema</div>
+        <div class="dep-line dep-completed">✓ #3 Create user model and migrations</div>
+        <div class="dep-line dep-in-progress">● #4 Implement JWT token refresh logic</div>
+        <div class="dep-line dep-arrow">     └─▶ #8 Write E2E tests for auth flow</div>
+        <div class="dep-line dep-in-progress">● #5 Add rate limiting middleware</div>
+        <div class="dep-line dep-completed">✓ #6 Set up Redis cache connection</div>
+        <div class="dep-line dep-completed">✓ #7 Configure CI/CD pipeline</div>
+        <div class="dep-line">○ #8 Write E2E tests for auth flow</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // URL 파라미터로 탭 자동 전환
+    const params = new URLSearchParams(window.location.search);
+    const activeTab = params.get('tab') || 'overview';
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.tab === activeTab);
+    });
+    document.querySelectorAll('.tab-content').forEach(el => {
+      el.classList.toggle('active', el.id === 'tab-' + activeTab);
+    });
+  </script>
+</body>
+</html>

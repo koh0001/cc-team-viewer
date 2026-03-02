@@ -2,11 +2,12 @@
   "name": "cc-team-viewer-vscode",
   "displayName": "CC Team Viewer",
   "description": "Claude Code Agent Teams 실시간 모니터링 — VS Code 확장",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "publisher": "koh-dev",
   "engines": {
     "vscode": "^1.90.0"
   },
+  "icon": "images/Logo.png",
   "categories": ["Other"],
   "activationEvents": [
     "onView:ccTeamViewer.treeView",
