@@ -4,6 +4,8 @@
 
 [English](README.md) | [日本語](README.ja.md) | [中文](README.zh.md)
 
+![대시보드 개요](packages/vscode/images/screenshot-overview.png)
+
 Agent Teams가 병렬로 작업할 때 각 에이전트의 상태, 태스크 진행률, 에이전트 간 메시지를 한눈에 볼 수 있는 대시보드입니다.
 
 ## 왜 필요한가?
@@ -23,6 +25,11 @@ CC Team Viewer는 `~/.claude/teams/`와 `~/.claude/tasks/` 디렉토리의 JSON 
 - **메시지 로그** — 에이전트 간 통신 내역 실시간 표시
 - **의존성 그래프** — 태스크 간 블로킹 관계 시각화
 - **진행률 통계** — 완료율, 경과 시간, 에이전트별 처리량
+- **다국어 지원** — 한국어, English, 日本語, 中文
+
+| 태스크 | 메시지 |
+|--------|--------|
+| ![태스크](packages/vscode/images/screenshot-tasks.png) | ![메시지](packages/vscode/images/screenshot-messages.png) |
 
 ## 패키지 구조
 
@@ -35,26 +42,31 @@ packages/
 
 ## 빠른 시작
 
+### VS Code 확장 (권장)
+
+[VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=koh-dev.cc-team-viewer-vscode)에서 설치:
+
+```
+ext install koh-dev.cc-team-viewer-vscode
+```
+
+또는 소스에서 빌드:
+
+```bash
+git clone https://github.com/koh0001/cc-team-viewer.git
+cd cc-team-viewer
+npm install && npm run build
+cd packages/vscode && npm run package
+code --install-extension cc-team-viewer-vscode-*.vsix
+```
+
 ### 터미널 TUI
 
 ```bash
-# 설치 & 빌드
 git clone https://github.com/koh0001/cc-team-viewer.git
 cd cc-team-viewer
-npm install
-npm run build
-
-# 실행
+npm install && npm run build
 npm run tui
-```
-
-### VS Code 확장
-
-```bash
-# 빌드 & 설치
-cd packages/vscode
-npm run package
-code --install-extension cc-team-viewer-*.vsix
 ```
 
 ## 호환성
@@ -84,6 +96,7 @@ npm install
 npm run dev        # TUI 개발 모드 (--watch)
 npm run build      # 전체 빌드
 npm run test:run   # 테스트 실행
+npm run lint       # ESLint 검사
 ```
 
 ## 라이선스

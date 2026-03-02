@@ -4,6 +4,8 @@
 
 [한국어](README.ko.md) | [日本語](README.ja.md) | [中文](README.zh.md)
 
+![Dashboard Overview](packages/vscode/images/screenshot-overview.png)
+
 A dashboard that lets you see each agent's status, task progress, and inter-agent messages at a glance when Agent Teams work in parallel.
 
 ## Why?
@@ -23,6 +25,11 @@ CC Team Viewer watches JSON files in `~/.claude/teams/` and `~/.claude/tasks/` i
 - **Message Log** — Real-time inter-agent communication
 - **Dependency Graph** — Task blocking relationships
 - **Progress Stats** — Completion rate, elapsed time, per-agent throughput
+- **Multi-language** — UI in English, Korean, Japanese, Chinese
+
+| Tasks | Messages |
+|-------|----------|
+| ![Tasks](packages/vscode/images/screenshot-tasks.png) | ![Messages](packages/vscode/images/screenshot-messages.png) |
 
 ## Package Structure
 
@@ -35,26 +42,31 @@ packages/
 
 ## Quick Start
 
+### VS Code Extension (Recommended)
+
+Install from the [VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=koh-dev.cc-team-viewer-vscode):
+
+```
+ext install koh-dev.cc-team-viewer-vscode
+```
+
+Or build from source:
+
+```bash
+git clone https://github.com/koh0001/cc-team-viewer.git
+cd cc-team-viewer
+npm install && npm run build
+cd packages/vscode && npm run package
+code --install-extension cc-team-viewer-vscode-*.vsix
+```
+
 ### Terminal TUI
 
 ```bash
-# Install & build
 git clone https://github.com/koh0001/cc-team-viewer.git
 cd cc-team-viewer
-npm install
-npm run build
-
-# Run
+npm install && npm run build
 npm run tui
-```
-
-### VS Code Extension
-
-```bash
-# Build & install
-cd packages/vscode
-npm run package
-code --install-extension cc-team-viewer-*.vsix
 ```
 
 ## Compatibility
@@ -84,6 +96,7 @@ npm install
 npm run dev        # TUI dev mode (--watch)
 npm run build      # Build all packages
 npm run test:run   # Run tests
+npm run lint       # ESLint check
 ```
 
 ## License
