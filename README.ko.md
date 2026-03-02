@@ -2,6 +2,10 @@
 
 **Claude Code Agent Teams 실시간 모니터링 도구**
 
+[![npm core](https://img.shields.io/npm/v/@cc-team-viewer/core?label=core)](https://www.npmjs.com/package/@cc-team-viewer/core)
+[![npm tui](https://img.shields.io/npm/v/@cc-team-viewer/tui?label=tui)](https://www.npmjs.com/package/@cc-team-viewer/tui)
+[![VS Code Marketplace](https://img.shields.io/visual-studio-marketplace/v/koh-dev.cc-team-viewer-vscode?label=vscode)](https://marketplace.visualstudio.com/items?itemName=koh-dev.cc-team-viewer-vscode)
+
 [English](README.md) | [日本語](README.ja.md) | [中文](README.zh.md)
 
 ![대시보드 개요](packages/vscode/images/screenshot-overview.png)
@@ -50,17 +54,30 @@ packages/
 ext install koh-dev.cc-team-viewer-vscode
 ```
 
-또는 소스에서 빌드:
+### 터미널 TUI
 
 ```bash
-git clone https://github.com/koh0001/cc-team-viewer.git
-cd cc-team-viewer
-npm install && npm run build
-cd packages/vscode && npm run package
-code --install-extension cc-team-viewer-vscode-*.vsix
+npm install -g @cc-team-viewer/tui
+cc-team-viewer
 ```
 
-### 터미널 TUI
+### 라이브러리로 사용
+
+```bash
+npm install @cc-team-viewer/core
+```
+
+```typescript
+import { TeamWatcher } from "@cc-team-viewer/core";
+
+const watcher = new TeamWatcher();
+watcher.on("snapshot:updated", (teamName, snapshot) => {
+  console.log(`${teamName}: ${snapshot.stats.completionRate}% 완료`);
+});
+await watcher.start();
+```
+
+### 소스에서 빌드
 
 ```bash
 git clone https://github.com/koh0001/cc-team-viewer.git

@@ -2,6 +2,10 @@
 
 **Real-time monitoring tool for Claude Code Agent Teams**
 
+[![npm core](https://img.shields.io/npm/v/@cc-team-viewer/core?label=core)](https://www.npmjs.com/package/@cc-team-viewer/core)
+[![npm tui](https://img.shields.io/npm/v/@cc-team-viewer/tui?label=tui)](https://www.npmjs.com/package/@cc-team-viewer/tui)
+[![VS Code Marketplace](https://img.shields.io/visual-studio-marketplace/v/koh-dev.cc-team-viewer-vscode?label=vscode)](https://marketplace.visualstudio.com/items?itemName=koh-dev.cc-team-viewer-vscode)
+
 [한국어](README.ko.md) | [日本語](README.ja.md) | [中文](README.zh.md)
 
 ![Dashboard Overview](packages/vscode/images/screenshot-overview.png)
@@ -50,17 +54,30 @@ Install from the [VS Code Marketplace](https://marketplace.visualstudio.com/item
 ext install koh-dev.cc-team-viewer-vscode
 ```
 
-Or build from source:
+### Terminal TUI
 
 ```bash
-git clone https://github.com/koh0001/cc-team-viewer.git
-cd cc-team-viewer
-npm install && npm run build
-cd packages/vscode && npm run package
-code --install-extension cc-team-viewer-vscode-*.vsix
+npm install -g @cc-team-viewer/tui
+cc-team-viewer
 ```
 
-### Terminal TUI
+### As a Library
+
+```bash
+npm install @cc-team-viewer/core
+```
+
+```typescript
+import { TeamWatcher } from "@cc-team-viewer/core";
+
+const watcher = new TeamWatcher();
+watcher.on("snapshot:updated", (teamName, snapshot) => {
+  console.log(`${teamName}: ${snapshot.stats.completionRate}% complete`);
+});
+await watcher.start();
+```
+
+### From Source
 
 ```bash
 git clone https://github.com/koh0001/cc-team-viewer.git

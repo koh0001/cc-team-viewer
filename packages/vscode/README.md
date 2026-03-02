@@ -4,7 +4,7 @@
 
 [한국어](README.ko.md) | [日本語](README.ja.md) | [中文](README.zh.md)
 
-![Overview](images/screenshot-overview.png)
+![Overview](https://raw.githubusercontent.com/koh0001/cc-team-viewer/main/packages/vscode/images/screenshot-overview.png)
 
 ## What is CC Team Viewer?
 
@@ -22,9 +22,9 @@ A rich, interactive dashboard with four tabs:
 | **Messages** | Real-time message log between agents |
 | **Deps** | Task dependency graph visualization |
 
-![Tasks](images/screenshot-tasks.png)
+![Tasks](https://raw.githubusercontent.com/koh0001/cc-team-viewer/main/packages/vscode/images/screenshot-tasks.png)
 
-![Messages](images/screenshot-messages.png)
+![Messages](https://raw.githubusercontent.com/koh0001/cc-team-viewer/main/packages/vscode/images/screenshot-messages.png)
 
 ### Tree View Sidebar
 Hierarchical view in the activity bar: **Team > Agent > Task**. Click any item to navigate directly.
