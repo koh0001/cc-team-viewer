@@ -4,7 +4,7 @@
 
 [English](README.md) | [日本語](README.ja.md) | [中文](README.zh.md)
 
-![개요](images/screenshot-overview.png)
+![개요](https://raw.githubusercontent.com/koh0001/cc-team-viewer/main/packages/vscode/images/screenshot-overview.png)
 
 ## CC Team Viewer란?
 
@@ -22,9 +22,9 @@
 | **Messages** | 에이전트 간 실시간 메시지 로그 |
 | **Deps** | 태스크 의존성 그래프 시각화 |
 
-![태스크](images/screenshot-tasks.png)
+![태스크](https://raw.githubusercontent.com/koh0001/cc-team-viewer/main/packages/vscode/images/screenshot-tasks.png)
 
-![메시지](images/screenshot-messages.png)
+![메시지](https://raw.githubusercontent.com/koh0001/cc-team-viewer/main/packages/vscode/images/screenshot-messages.png)
 
 ### 트리뷰 사이드바
 활동 바에서 **팀 > 에이전트 > 태스크** 계층 구조로 탐색. 항목 클릭 시 바로 이동.

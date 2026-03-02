@@ -4,7 +4,7 @@
 
 [English](README.md) | [한국어](README.ko.md) | [日本語](README.ja.md)
 
-![概览](images/screenshot-overview.png)
+![概览](https://raw.githubusercontent.com/koh0001/cc-team-viewer/main/packages/vscode/images/screenshot-overview.png)
 
 ## 什么是 CC Team Viewer？
 
@@ -22,9 +22,9 @@
 | **Messages** | 代理间实时消息日志 |
 | **Deps** | 任务依赖关系图可视化 |
 
-![任务](images/screenshot-tasks.png)
+![任务](https://raw.githubusercontent.com/koh0001/cc-team-viewer/main/packages/vscode/images/screenshot-tasks.png)
 
-![消息](images/screenshot-messages.png)
+![消息](https://raw.githubusercontent.com/koh0001/cc-team-viewer/main/packages/vscode/images/screenshot-messages.png)
 
 ### 树视图侧边栏
 在活动栏中以**团队 > 代理 > 任务**层级结构导航。

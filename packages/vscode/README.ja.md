@@ -4,7 +4,7 @@
 
 [English](README.md) | [한국어](README.ko.md) | [中文](README.zh.md)
 
-![概要](images/screenshot-overview.png)
+![概要](https://raw.githubusercontent.com/koh0001/cc-team-viewer/main/packages/vscode/images/screenshot-overview.png)
 
 ## CC Team Viewerとは？
 
@@ -22,9 +22,9 @@
 | **Messages** | エージェント間のリアルタイムメッセージログ |
 | **Deps** | タスク依存関係グラフの可視化 |
 
-![タスク](images/screenshot-tasks.png)
+![タスク](https://raw.githubusercontent.com/koh0001/cc-team-viewer/main/packages/vscode/images/screenshot-tasks.png)
 
-![メッセージ](images/screenshot-messages.png)
+![メッセージ](https://raw.githubusercontent.com/koh0001/cc-team-viewer/main/packages/vscode/images/screenshot-messages.png)
 
 ### ツリービューサイドバー
 アクティビティバーで**チーム > エージェント > タスク**の階層構造をナビゲート。
