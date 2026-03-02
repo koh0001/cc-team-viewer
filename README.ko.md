@@ -31,9 +31,11 @@ CC Team Viewer는 `~/.claude/teams/`와 `~/.claude/tasks/` 디렉토리의 JSON 
 - **진행률 통계** — 완료율, 경과 시간, 에이전트별 처리량
 - **다국어 지원** — 한국어, English, 日本語, 中文
 
-| 태스크 | 칸반 | 메시지 |
-|--------|------|--------|
-| ![태스크](packages/vscode/images/screenshot-tasks.png) | ![칸반](packages/vscode/images/screenshot-kanban.png) | ![메시지](packages/vscode/images/screenshot-messages.png) |
+![태스크](packages/vscode/images/screenshot-tasks.png)
+
+![칸반](packages/vscode/images/screenshot-kanban.png)
+
+![메시지](packages/vscode/images/screenshot-messages.png)
 
 ## 패키지 구조
 

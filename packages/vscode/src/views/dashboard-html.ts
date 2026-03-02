@@ -14,7 +14,7 @@ export function getDashboardHtml(nonce: string, cspSource: string): string {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="Content-Security-Policy"
-        content="default-src 'none'; style-src ${cspSource} 'unsafe-inline'; script-src 'nonce-${nonce}'; font-src ${cspSource}; img-src ${cspSource} https:;">
+        content="default-src 'none'; style-src ${cspSource} 'unsafe-inline'; script-src 'nonce-${nonce}'; font-src ${cspSource}; img-src ${cspSource} https:; worker-src 'none';">
   <style nonce="${nonce}">${getDashboardCss()}</style>
 </head>
 <body>

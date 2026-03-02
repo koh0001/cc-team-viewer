@@ -31,9 +31,11 @@ CC Team Viewerは`~/.claude/teams/`と`~/.claude/tasks/`ディレクトリのJSO
 - **進捗統計** — 完了率、経過時間、エージェント別スループット
 - **多言語サポート** — English、한국어、日本語、中文
 
-| タスク | カンバン | メッセージ |
-|--------|----------|-----------|
-| ![タスク](packages/vscode/images/screenshot-tasks.png) | ![カンバン](packages/vscode/images/screenshot-kanban.png) | ![メッセージ](packages/vscode/images/screenshot-messages.png) |
+![タスク](packages/vscode/images/screenshot-tasks.png)
+
+![カンバン](packages/vscode/images/screenshot-kanban.png)
+
+![メッセージ](packages/vscode/images/screenshot-messages.png)
 
 ## パッケージ構造
 

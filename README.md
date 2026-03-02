@@ -31,9 +31,11 @@ CC Team Viewer watches JSON files in `~/.claude/teams/` and `~/.claude/tasks/` i
 - **Progress Stats** — Completion rate, elapsed time, per-agent throughput
 - **Multi-language** — UI in English, Korean, Japanese, Chinese
 
-| Tasks | Kanban | Messages |
-|-------|--------|----------|
-| ![Tasks](packages/vscode/images/screenshot-tasks.png) | ![Kanban](packages/vscode/images/screenshot-kanban.png) | ![Messages](packages/vscode/images/screenshot-messages.png) |
+![Tasks](packages/vscode/images/screenshot-tasks.png)
+
+![Kanban](packages/vscode/images/screenshot-kanban.png)
+
+![Messages](packages/vscode/images/screenshot-messages.png)
 
 ## Package Structure
 
