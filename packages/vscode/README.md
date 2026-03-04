@@ -17,10 +17,10 @@ A rich, interactive dashboard with four tabs:
 
 | Tab | Description |
 |-----|-------------|
-| **Overview** | Agent cards with status, active tasks, and progress |
-| **Tasks** | Full task table with status indicators and ownership |
-| **Messages** | Real-time message log between agents |
-| **Deps** | Task dependency graph visualization |
+| **Overview** | Agent cards with status, active tasks, and progress. Click to expand assigned task list |
+| **Tasks** | Task table or kanban board with inline detail panel (description, blockedBy/blocks links) |
+| **Messages** | Message log with filter buttons (All/Conversation/System) and thread grouping |
+| **Deps** | DAG graph visualization with CSS Grid layout and SVG Bezier curve edges |
 
 ![Tasks](https://raw.githubusercontent.com/koh0001/cc-team-viewer/main/packages/vscode/images/screenshot-tasks.png)
 
@@ -38,9 +38,12 @@ Dashboard UI available in 4 languages: English, Korean, Japanese, Chinese.
 - Or click the language button in the dashboard header to cycle through languages
 
 ### Additional Features
+- **Task Detail Panel** — Click any task to expand inline details with description, status, owner, and dependency links
+- **Message Threading** — Consecutive messages between same agents grouped into collapsible threads
+- **Real-time Notifications** — VS Code popups for task completion and agent join/leave events
 - **Team Pill Switcher** — Quick switching when monitoring multiple teams
 - **Agent Pulse Animation** — Visual indicator for actively working agents
-- **Real-time Updates** — Automatic 1-second polling, no manual refresh needed
+- **Render Optimization** — Only active tab renders; unchanged snapshots skip re-render
 - **Theme Integration** — Adapts to your VS Code theme (light/dark/high contrast)
 
 ## Installation
