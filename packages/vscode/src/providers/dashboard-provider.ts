@@ -27,9 +27,13 @@ const WEBVIEW_TRANSLATION_KEYS: TranslationKey[] = [
   "task.viewTable", "task.viewKanban",
   "task.columnPending", "task.columnInProgress", "task.columnCompleted",
   "task.blockedByLabel",
+  "task.noDescription", "task.blocksLabel",
   "message.headerFrom", "message.headerTo", "message.headerContent",
   "message.headerTime", "message.noMessages",
+  "message.filterAll", "message.filterConversation", "message.filterSystem",
+  "message.threadCount",
   "view.overview", "view.tasks", "view.messages", "view.deps",
+  "deps.noTasks",
 ];
 
 export class DashboardProvider implements vscode.Disposable {
@@ -228,6 +232,7 @@ export class DashboardProvider implements vscode.Disposable {
       tasks: snapshot.tasks.map((task): TaskPayload => ({
         id: task.id,
         subject: task.subject,
+        description: task.description,
         status: task.status,
         owner: task.owner,
         blockedBy: [...task.blockedBy],

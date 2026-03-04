@@ -62,6 +62,8 @@ export const zh: TranslationMap = {
   "task.columnInProgress": "进行中",
   "task.columnCompleted": "已完成",
   "task.blockedByLabel": "被阻塞",
+  "task.noDescription": "无描述",
+  "task.blocksLabel": "阻塞中",
 
   // 消息
   "message.headerFrom": "发送",
@@ -70,14 +72,22 @@ export const zh: TranslationMap = {
   "message.headerTime": "时间",
   "message.noMessages": "无消息",
   "message.olderOmitted": "... 省略{count}条旧消息",
+  "message.filterAll": "全部",
+  "message.filterConversation": "对话",
+  "message.filterSystem": "系统",
+  "message.threadCount": "{count}条消息",
 
   // 依赖图
   "deps.sectionTitle": "任务依赖图",
+  "deps.noTasks": "无任务",
 
   // 错误
   "error.claudeDirNotFound": "找不到Claude目录: {path}",
   "error.agentTeamsNotActive": "请确认Agent Teams是否已启用。",
   "error.startFailed": "启动失败: {message}",
+  "notification.taskCompleted": "✓ #{id} {subject} 已完成",
+  "notification.agentJoined": "⚡ {name} 加入",
+  "notification.agentLeft": "💤 {name} 离开",
 
   // CLI
   "cli.usage": "用法",

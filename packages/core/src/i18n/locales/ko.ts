@@ -62,6 +62,8 @@ export const ko: TranslationMap = {
   "task.columnInProgress": "진행중",
   "task.columnCompleted": "완료",
   "task.blockedByLabel": "차단",
+  "task.noDescription": "설명 없음",
+  "task.blocksLabel": "차단 중",
 
   // 메시지
   "message.headerFrom": "발신",
@@ -70,14 +72,22 @@ export const ko: TranslationMap = {
   "message.headerTime": "시간",
   "message.noMessages": "메시지 없음",
   "message.olderOmitted": "... {count}개 이전 메시지 생략",
+  "message.filterAll": "전체",
+  "message.filterConversation": "대화",
+  "message.filterSystem": "시스템",
+  "message.threadCount": "{count}개 메시지",
 
   // 의존성 그래프
   "deps.sectionTitle": "태스크 의존성 그래프",
+  "deps.noTasks": "태스크 없음",
 
   // 에러
   "error.claudeDirNotFound": "Claude 디렉토리를 찾을 수 없습니다: {path}",
   "error.agentTeamsNotActive": "Agent Teams가 활성화되어 있는지 확인해주세요.",
   "error.startFailed": "시작 실패: {message}",
+  "notification.taskCompleted": "✓ #{id} {subject} 완료",
+  "notification.agentJoined": "⚡ {name} 합류",
+  "notification.agentLeft": "💤 {name} 이탈",
 
   // CLI
   "cli.usage": "사용법",

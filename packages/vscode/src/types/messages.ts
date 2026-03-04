@@ -20,6 +20,7 @@ export interface AgentPayload {
 export interface TaskPayload {
   id: string;
   subject: string;
+  description?: string;
   status: "pending" | "in_progress" | "completed";
   owner: string;
   blockedBy: string[];

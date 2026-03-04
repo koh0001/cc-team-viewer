@@ -76,6 +76,8 @@ export type TranslationMap = {
   "task.columnInProgress": string;
   "task.columnCompleted": string;
   "task.blockedByLabel": string;
+  "task.noDescription": string;
+  "task.blocksLabel": string;
 
   // 메시지
   "message.headerFrom": string;
@@ -84,14 +86,22 @@ export type TranslationMap = {
   "message.headerTime": string;
   "message.noMessages": string;
   "message.olderOmitted": string;
+  "message.filterAll": string;
+  "message.filterConversation": string;
+  "message.filterSystem": string;
+  "message.threadCount": string;
 
   // 의존성 그래프
   "deps.sectionTitle": string;
+  "deps.noTasks": string;
 
   // 에러
   "error.claudeDirNotFound": string;
   "error.agentTeamsNotActive": string;
   "error.startFailed": string;
+  "notification.taskCompleted": string;
+  "notification.agentJoined": string;
+  "notification.agentLeft": string;
 
   // CLI
   "cli.usage": string;

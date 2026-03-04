@@ -9,6 +9,8 @@ import {
   TeamWatcher,
   createI18n,
   type TeamSnapshot,
+  type Task,
+  type TeamMember,
   type I18nInstance,
   type Locale,
 } from "@cc-team-viewer/core";
@@ -58,6 +60,25 @@ export class WatcherService implements vscode.Disposable {
 
     this.watcher.on("error", (error: Error, context: string) => {
       this._onError.fire({ error, context });
+    });
+
+    // 실시간 알림
+    this.watcher.on("task:completed", (teamName: string, task: Task) => {
+      const msg = this.i18n.t("notification.taskCompleted", {
+        id: task.id,
+        subject: task.subject,
+      });
+      vscode.window.showInformationMessage(`[${teamName}] ${msg}`);
+    });
+
+    this.watcher.on("agent:joined", (teamName: string, member: TeamMember) => {
+      const msg = this.i18n.t("notification.agentJoined", { name: member.name });
+      vscode.window.showInformationMessage(`[${teamName}] ${msg}`);
+    });
+
+    this.watcher.on("agent:left", (teamName: string, memberName: string) => {
+      const msg = this.i18n.t("notification.agentLeft", { name: memberName });
+      vscode.window.showInformationMessage(`[${teamName}] ${msg}`);
     });
   }
 

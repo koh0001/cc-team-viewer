@@ -62,6 +62,8 @@ export const ja: TranslationMap = {
   "task.columnInProgress": "進行中",
   "task.columnCompleted": "完了",
   "task.blockedByLabel": "ブロック",
+  "task.noDescription": "説明なし",
+  "task.blocksLabel": "ブロック中",
 
   // メッセージ
   "message.headerFrom": "送信",
@@ -70,14 +72,22 @@ export const ja: TranslationMap = {
   "message.headerTime": "時間",
   "message.noMessages": "メッセージなし",
   "message.olderOmitted": "... {count}件の古いメッセージを省略",
+  "message.filterAll": "すべて",
+  "message.filterConversation": "会話",
+  "message.filterSystem": "システム",
+  "message.threadCount": "{count}件",
 
   // 依存関係グラフ
   "deps.sectionTitle": "タスク依存関係グラフ",
+  "deps.noTasks": "タスクなし",
 
   // エラー
   "error.claudeDirNotFound": "Claudeディレクトリが見つかりません: {path}",
   "error.agentTeamsNotActive": "Agent Teamsが有効か確認してください。",
   "error.startFailed": "起動失敗: {message}",
+  "notification.taskCompleted": "✓ #{id} {subject} 完了",
+  "notification.agentJoined": "⚡ {name} 参加",
+  "notification.agentLeft": "💤 {name} 離脱",
 
   // CLI
   "cli.usage": "使い方",

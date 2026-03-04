@@ -390,6 +390,55 @@ export function getDashboardCss(): string {
       opacity: 0.5;
     }
 
+    /* 태스크 상세 패널 */
+    .task-detail-panel {
+      background: var(--vscode-editorWidget-background);
+      border: 1px solid var(--vscode-widget-border);
+      border-radius: 4px;
+      padding: 12px 16px;
+      margin: 4px 0 8px;
+      animation: fadeIn 0.15s ease-out;
+      font-size: 12px;
+    }
+    .task-detail-desc {
+      margin-bottom: 8px;
+      line-height: 1.6;
+      white-space: pre-wrap;
+      word-break: break-word;
+      color: var(--vscode-foreground);
+    }
+    .task-detail-desc.empty {
+      color: var(--vscode-descriptionForeground);
+      font-style: italic;
+    }
+    .task-detail-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      font-size: 11px;
+      color: var(--vscode-descriptionForeground);
+      border-top: 1px solid var(--vscode-widget-border);
+      padding-top: 8px;
+    }
+    .task-detail-meta-item {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .task-detail-meta-label {
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
+    .task-detail-link {
+      color: var(--vscode-textLink-foreground);
+      cursor: pointer;
+      text-decoration: none;
+    }
+    .task-detail-link:hover { text-decoration: underline; }
+    .task-table tbody tr { cursor: pointer; }
+    .kanban-card { cursor: pointer; }
+
     /* 메시지 로그 */
     .message-row {
       display: flex;
@@ -433,26 +482,160 @@ export function getDashboardCss(): string {
       margin: 2px 0;
     }
 
-    /* 의존성 그래프 */
-    .dep-line {
-      font-family: monospace;
-      font-size: 12px;
-      padding: 2px 0;
-      border-radius: 3px;
+    /* 메시지 필터 토글 */
+    .msg-filter-toggle {
+      display: flex;
+      gap: 0;
+      margin-bottom: 12px;
+      border: 1px solid var(--vscode-widget-border);
+      border-radius: 4px;
+      overflow: hidden;
+      width: fit-content;
     }
-    .dep-completed {
-      color: var(--vscode-charts-green);
-      padding-left: 6px;
-      border-left: 2px solid var(--vscode-charts-green);
-    }
-    .dep-in-progress {
-      color: var(--vscode-charts-yellow);
-      padding-left: 6px;
-      border-left: 2px solid var(--vscode-charts-yellow);
-    }
-    .dep-arrow {
+    .msg-filter-btn {
+      background: var(--vscode-editorWidget-background);
       color: var(--vscode-descriptionForeground);
-      padding-left: 16px;
+      border: none;
+      padding: 4px 12px;
+      font-size: 11px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      border-right: 1px solid var(--vscode-widget-border);
+    }
+    .msg-filter-btn:last-child { border-right: none; }
+    .msg-filter-btn:hover {
+      background: var(--overlay-medium);
+      color: var(--vscode-foreground);
+    }
+    .msg-filter-btn.active {
+      background: var(--vscode-badge-background);
+      color: var(--vscode-badge-foreground);
+      font-weight: 600;
+    }
+
+    /* 메시지 스레드 */
+    .msg-thread {
+      margin-bottom: 8px;
+      border: 1px solid var(--vscode-widget-border);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    .msg-thread-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 10px;
+      background: var(--overlay-subtle);
+      cursor: pointer;
+      font-size: 12px;
+      transition: background 0.15s ease;
+    }
+    .msg-thread-header:hover { background: var(--overlay-medium); }
+    .msg-thread-agents {
+      font-weight: 600;
+      color: var(--vscode-textLink-foreground);
+    }
+    .msg-thread-count {
+      background: var(--vscode-badge-background);
+      color: var(--vscode-badge-foreground);
+      font-size: 10px;
+      padding: 1px 6px;
+      border-radius: 8px;
+      margin-left: auto;
+    }
+    .msg-thread-time {
+      color: var(--vscode-descriptionForeground);
+      font-size: 11px;
+    }
+    .msg-thread-toggle {
+      color: var(--vscode-descriptionForeground);
+      font-size: 10px;
+      transition: transform 0.15s ease;
+    }
+    .msg-thread-toggle.expanded { transform: rotate(90deg); }
+    .msg-thread-body {
+      display: none;
+      padding: 4px 0;
+    }
+    .msg-thread-body.expanded { display: block; }
+
+    /* 의존성 DAG 그래프 */
+    .dep-graph-container {
+      position: relative;
+      overflow-x: auto;
+      padding-bottom: 8px;
+    }
+    .dep-graph {
+      display: grid;
+      gap: 16px 40px;
+      padding: 16px;
+      min-width: fit-content;
+      position: relative;
+    }
+    .dep-node {
+      background: var(--vscode-editor-background);
+      border: 1px solid var(--vscode-widget-border);
+      border-radius: 6px;
+      padding: 8px 12px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      position: relative;
+      z-index: 1;
+      min-width: 140px;
+      max-width: 220px;
+    }
+    .dep-node:hover {
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+      border-color: var(--vscode-focusBorder);
+      transform: translateY(-1px);
+    }
+    .dep-node.completed {
+      border-left: 3px solid var(--vscode-charts-green);
+      opacity: 0.6;
+    }
+    .dep-node.in_progress {
+      border-left: 3px solid var(--vscode-charts-yellow);
+    }
+    .dep-node.pending {
+      border-left: 3px solid var(--vscode-descriptionForeground);
+      opacity: 0.8;
+    }
+    .dep-node-id {
+      font-size: 10px;
+      color: var(--vscode-descriptionForeground);
+      font-weight: 600;
+    }
+    .dep-node-subject {
+      font-size: 12px;
+      margin: 2px 0;
+      line-height: 1.3;
+      word-break: break-word;
+    }
+    .dep-node-owner {
+      font-size: 10px;
+      color: var(--vscode-textLink-foreground);
+    }
+    .dep-svg-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      pointer-events: none;
+      z-index: 0;
+    }
+    .dep-edge {
+      fill: none;
+      stroke: var(--vscode-widget-border);
+      stroke-width: 1.5;
+    }
+    .dep-edge-arrow {
+      fill: var(--vscode-widget-border);
+    }
+    .dep-no-deps {
+      text-align: center;
+      color: var(--vscode-descriptionForeground);
+      font-size: 11px;
+      padding: 16px 0;
+      opacity: 0.5;
     }
 
     /* 빈 상태 */
