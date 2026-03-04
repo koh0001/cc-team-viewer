@@ -1,5 +1,8 @@
 # CC Team Viewer for VS Code
 
+[![VS Code Marketplace](https://img.shields.io/visual-studio-marketplace/v/koh-dev.cc-team-viewer-vscode?label=VS%20Code%20Marketplace&logo=visual-studio-code)](https://marketplace.visualstudio.com/items?itemName=koh-dev.cc-team-viewer-vscode)
+[![Installs](https://img.shields.io/visual-studio-marketplace/i/koh-dev.cc-team-viewer-vscode)](https://marketplace.visualstudio.com/items?itemName=koh-dev.cc-team-viewer-vscode)
+
 **Real-time monitoring dashboard for Claude Code Agent Teams**
 
 [한국어](README.ko.md) | [日本語](README.ja.md) | [中文](README.zh.md)
@@ -50,7 +53,9 @@ Dashboard UI available in 4 languages: English, Korean, Japanese, Chinese.
 
 ### From VS Code Marketplace
 
-Search for **"CC Team Viewer"** in the Extensions panel, or:
+**[Install from Marketplace](https://marketplace.visualstudio.com/items?itemName=koh-dev.cc-team-viewer-vscode)**
+
+Or search for **"CC Team Viewer"** in the Extensions panel, or:
 
 ```
 ext install koh-dev.cc-team-viewer-vscode

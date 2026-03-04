@@ -1,5 +1,8 @@
 # CC Team Viewer for VS Code
 
+[![VS Code Marketplace](https://img.shields.io/visual-studio-marketplace/v/koh-dev.cc-team-viewer-vscode?label=VS%20Code%20Marketplace&logo=visual-studio-code)](https://marketplace.visualstudio.com/items?itemName=koh-dev.cc-team-viewer-vscode)
+[![Installs](https://img.shields.io/visual-studio-marketplace/i/koh-dev.cc-team-viewer-vscode)](https://marketplace.visualstudio.com/items?itemName=koh-dev.cc-team-viewer-vscode)
+
 **Claude Code Agent Teams 实时监控仪表板**
 
 [English](README.md) | [한국어](README.ko.md) | [日本語](README.ja.md)
@@ -50,7 +53,9 @@
 
 ### 从 VS Code Marketplace
 
-在扩展面板中搜索 **"CC Team Viewer"**，或：
+**[从 Marketplace 安装](https://marketplace.visualstudio.com/items?itemName=koh-dev.cc-team-viewer-vscode)**
+
+或在扩展面板中搜索 **"CC Team Viewer"**，或：
 
 ```
 ext install koh-dev.cc-team-viewer-vscode
