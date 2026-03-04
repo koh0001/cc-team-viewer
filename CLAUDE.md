@@ -18,7 +18,7 @@ npm run clean          # dist/ 전체 삭제
 ```
 
 VS Code 확장 디버깅: `F5` (Extension Host 실행)
-VS Code 패키징: `cd packages/vscode && npm run package`
+VS Code 패키징: `cd packages/vscode && npx vsce package --no-dependencies`
 
 ## 아키텍처
 모노레포 구조. 핵심 로직은 `@cc-team-viewer/core`에 집중하고, UI 레이어(TUI, VS Code)는 코어를 소비한다.
@@ -30,25 +30,14 @@ packages/
 └── vscode/   → VS Code 확장프로그램 (WebView 패널)
 ```
 
-## 개발 페이즈
+## 구현 상태
 
-### Phase 1: Core + TUI (완료)
-- [x] core: TeamWatcher - 폴링 기반 파일 변경 감지
-- [x] core: ConfigParser - config.json → TeamConfig 타입 변환
-- [x] core: TaskParser - tasks/*.json → Task[] 변환
-- [x] core: InboxParser - inboxes/*.json → Message[] 변환
-- [x] core: EventEmitter 기반 상태 변경 이벤트
-- [x] tui: 팀 목록 사이드바
-- [x] tui: 에이전트 상태 패널
-- [x] tui: 태스크 진행률 뷰
-- [x] tui: 메시지 로그 뷰
-- [ ] tui: 의존성 그래프 (ASCII)
+### Core + TUI (완료)
+TeamWatcher, ConfigParser, TaskParser, InboxParser, EventEmitter, 터미널 UI 전체 구현.
+미구현: TUI 의존성 그래프 (ASCII)
 
-### Phase 2: VS Code 확장 (진행 중)
-- [x] vscode: WebView 패널 (HTML 기반 대시보드)
-- [x] vscode: FileSystemWatcher 연동
-- [x] vscode: 상태 바 표시 (진행률 요약)
-- [x] vscode: 트리뷰 (팀 → 에이전트 → 태스크 계층)
+### VS Code 확장 (완료)
+WebView 대시보드 (Overview/Tasks/Messages/Deps 4탭), 트리뷰 사이드바, 상태 바, 칸반 보드 뷰 (테이블/칸반 토글), 다국어 전환 (Settings + 대시보드 버튼)
 
 ## Agent Teams 파일 프로토콜
 
@@ -108,6 +97,8 @@ packages/vscode/src/
 ├── providers/
 │   ├── dashboard-provider.ts → WebView 패널 (TeamSnapshot → HTML)
 │   └── tree-provider.ts      → 사이드바 트리뷰 (팀→에이전트→태스크)
+├── types/
+│   └── messages.ts           → Extension ↔ WebView 메시지 타입 정의
 └── views/
     ├── dashboard-html.ts     → HTML 템플릿 (정적 구조)
     ├── dashboard-css.ts      → CSS (VS Code 테마 변수 활용)
@@ -115,10 +106,15 @@ packages/vscode/src/
 ```
 
 ### WebView 보안 컨벤션
-- CSP: `script-src 'nonce-{nonce}'`만 허용 (인라인 스크립트 차단)
+- CSP: `script-src 'nonce-{nonce}'`만 허용, `worker-src 'none'` 필수 (ServiceWorker 차단)
 - DOM 조작: `innerHTML` 금지, `textContent` + DOM API 사용
 - 사용자 입력(메시지, 태스크명): `escapeHtml()`로 이스케이프 필수
 - 이벤트: `onclick` 속성 대신 `addEventListener` 사용 (CSP 호환)
+
+### WebView Gotchas
+- `localResourceRoots: []` — CSS/JS 전부 인라인이므로 로컬 리소스 불필요. 빈 배열로 설정해야 ServiceWorker 등록 시도를 회피
+- VS Code ServiceWorker 캐시 깨짐 시 `%APPDATA%\Code\Service Worker\` 삭제 후 재시작
+- dashboard-js.ts에서 `var` 사용 — 템플릿 리터럴 내부이므로 `const`/`let` 대신 `var` 사용 (함수 스코프 필요)
 
 ## 코딩 컨벤션
 - 모든 주석과 문서는 한국어
