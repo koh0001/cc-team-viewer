@@ -5,6 +5,23 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.5] - 2026-03-05
+
+### Added
+
+- **VS Code Extension**: Task detail panel — inline accordion on row/card/node click showing description, owner, blockedBy/blocks
+- **VS Code Extension**: Message filter buttons (All/Conversation/System) with thread grouping by sender→receiver pair
+- **VS Code Extension**: Deps tab DAG graph visualization — CSS Grid layout with SVG Bezier edge overlay and topological sort
+- **VS Code Extension**: Overview agent detail panel — click agent card to see assigned tasks with status dots
+- **VS Code Extension**: Real-time notifications for task:completed, agent:joined, agent:left events
+- **Core**: 10 new i18n keys across 4 locales (ko, en, ja, zh)
+
+### Fixed
+
+- **Core**: TeamWatcher now skips `snapshot:updated` event when data hasn't changed (eliminates unnecessary re-renders)
+- **VS Code Extension**: Render optimization — only active tab renders, others marked dirty; tab switch re-renders if dirty
+- **VS Code Extension**: Message thread expand/collapse state preserved across re-renders via `state.expandedThreads`
+
 ## [0.1.1] - 2025-03-03
 
 ### Added

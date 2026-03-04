@@ -238,8 +238,17 @@ export class TeamWatcher extends EventEmitter {
       this.detectMemberChanges(teamName, prevSnapshot.config, snapshot.config);
     }
 
-    // 스냅샷 갱신 이벤트
-    this.emit("snapshot:updated", teamName, snapshot);
+    // 스냅샷이 실제 변경된 경우에만 갱신 이벤트 발행
+    const snapshotChanged = !prevSnapshot
+      || snapshot.tasks.length !== prevSnapshot.tasks.length
+      || snapshot.messages.length !== prevSnapshot.messages.length
+      || snapshot.config.members.length !== prevSnapshot.config.members.length
+      || JSON.stringify(snapshot.tasks) !== JSON.stringify(prevSnapshot.tasks)
+      || JSON.stringify(snapshot.config.members) !== JSON.stringify(prevSnapshot.config.members);
+
+    if (snapshotChanged) {
+      this.emit("snapshot:updated", teamName, snapshot);
+    }
     this.prevSnapshots.set(teamName, snapshot);
   }
 

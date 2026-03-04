@@ -219,6 +219,28 @@ export function getDashboardCss(): string {
       margin-top: 4px;
     }
 
+    /* 에이전트 상세 패널 */
+    .agent-detail-panel {
+      margin-top: 8px;
+      padding: 8px 12px;
+      border-top: 1px solid var(--vscode-widget-border);
+      animation: fadeIn 0.15s ease;
+    }
+    .agent-detail-label {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--vscode-foreground);
+      margin-bottom: 4px;
+    }
+    .agent-detail-task {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      padding: 3px 0;
+      color: var(--vscode-foreground);
+    }
+
     /* 태스크 테이블 */
     .task-table { width: 100%; font-size: 12px; border-collapse: collapse; }
     .task-table th {
@@ -444,7 +466,7 @@ export function getDashboardCss(): string {
       display: flex;
       gap: 8px;
       font-size: 12px;
-      padding: 8px 0;
+      padding: 8px 4px;
       border-bottom: 1px solid var(--vscode-widget-border);
       transition: background 0.15s ease;
       border-radius: 3px;
@@ -555,7 +577,7 @@ export function getDashboardCss(): string {
     .msg-thread-toggle.expanded { transform: rotate(90deg); }
     .msg-thread-body {
       display: none;
-      padding: 4px 0;
+      padding: 4px 12px;
     }
     .msg-thread-body.expanded { display: block; }
 

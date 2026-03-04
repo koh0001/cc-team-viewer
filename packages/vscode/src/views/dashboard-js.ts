@@ -24,7 +24,10 @@ export function getDashboardJs(): string {
       locale: 'ko',
       dirtyTabs: new Set(),
       expandedTaskId: null,
-      messageFilter: 'all'
+      messageFilter: 'all',
+      expandedThreads: new Set(),
+      expandedAgentName: null,
+      lastSnapshotJson: {}
     };
 
     // 준비 완료 신호
@@ -47,6 +50,9 @@ export function getDashboardJs(): string {
           renderAll();
           break;
         case 'snapshotUpdate':
+          var newJson = JSON.stringify(msg.data);
+          if (state.lastSnapshotJson[msg.teamName] === newJson) break;
+          state.lastSnapshotJson[msg.teamName] = newJson;
           state.teams[msg.teamName] = msg.data;
           if (!state.selectedTeam) state.selectedTeam = msg.teamName;
           renderAll();
@@ -197,27 +203,28 @@ export function getDashboardJs(): string {
         el.appendChild(p);
         return;
       }
-      snap.agents.forEach(agent => {
-        const card = document.createElement('div');
+      snap.agents.forEach(function(agent) {
+        var card = document.createElement('div');
         card.className = 'agent-card' + (!agent.isIdle && !agent.isLead ? ' agent-active' : '');
         card.style.setProperty('--agent-color', agent.color);
+        card.style.cursor = 'pointer';
 
-        const icon = agent.isLead ? '\\u{1F451}' : agent.isIdle ? '\\u{1F4A4}' : '\\u26A1';
-        const header = document.createElement('div');
+        var icon = agent.isLead ? '\\u{1F451}' : agent.isIdle ? '\\u{1F4A4}' : '\\u26A1';
+        var header = document.createElement('div');
         header.className = 'agent-header';
 
-        const left = document.createElement('span');
+        var left = document.createElement('span');
         left.textContent = icon + ' ';
-        const nameSpan = document.createElement('span');
+        var nameSpan = document.createElement('span');
         nameSpan.className = 'agent-name';
         nameSpan.textContent = agent.name;
-        const metaSpan = document.createElement('span');
+        var metaSpan = document.createElement('span');
         metaSpan.className = 'agent-meta';
         metaSpan.textContent = ' (' + agent.agentType + ')';
         left.appendChild(nameSpan);
         left.appendChild(metaSpan);
 
-        const right = document.createElement('span');
+        var right = document.createElement('span');
         right.className = 'agent-meta';
         right.textContent = agent.model + ' \\u00B7 ' + agent.backendType;
 
@@ -225,19 +232,59 @@ export function getDashboardJs(): string {
         header.appendChild(right);
         card.appendChild(header);
 
-        agent.activeTasks.forEach(task => {
-          const taskDiv = document.createElement('div');
+        agent.activeTasks.forEach(function(task) {
+          var taskDiv = document.createElement('div');
           taskDiv.className = 'agent-task';
           taskDiv.textContent = '\\u25CF ' + task.subject;
           card.appendChild(taskDiv);
         });
 
-        const progress = document.createElement('div');
+        var progress = document.createElement('div');
         progress.className = 'agent-progress';
         progress.textContent = t('agent.taskProgress')
           .replace('{completed}', String(agent.completedCount))
           .replace('{total}', String(agent.totalCount));
         card.appendChild(progress);
+
+        // 에이전트 상세 패널 (클릭 시 펼침)
+        if (state.expandedAgentName === agent.name) {
+          var detail = document.createElement('div');
+          detail.className = 'agent-detail-panel';
+
+          // 담당 태스크 전체 목록
+          var agentTasks = snap.tasks.filter(function(tk) { return tk.owner === agent.name; });
+          if (agentTasks.length > 0) {
+            var taskLabel = document.createElement('div');
+            taskLabel.className = 'agent-detail-label';
+            taskLabel.textContent = t('stats.tasks') + ' (' + agentTasks.length + ')';
+            detail.appendChild(taskLabel);
+
+            agentTasks.forEach(function(tk) {
+              var taskRow = document.createElement('div');
+              taskRow.className = 'agent-detail-task';
+              var dot = document.createElement('span');
+              dot.className = 'task-status ' + tk.status;
+              taskRow.appendChild(dot);
+              var taskText = document.createElement('span');
+              taskText.textContent = '#' + tk.id + ' ' + tk.subject;
+              taskRow.appendChild(taskText);
+              detail.appendChild(taskRow);
+            });
+          } else {
+            var noTask = document.createElement('div');
+            noTask.className = 'agent-detail-label';
+            noTask.style.color = 'var(--vscode-descriptionForeground)';
+            noTask.textContent = t('task.unassigned');
+            detail.appendChild(noTask);
+          }
+
+          card.appendChild(detail);
+        }
+
+        card.addEventListener('click', function() {
+          state.expandedAgentName = (state.expandedAgentName === agent.name) ? null : agent.name;
+          renderOverview(snap);
+        });
 
         el.appendChild(card);
       });
@@ -564,6 +611,7 @@ export function getDashboardJs(): string {
       btn.textContent = t(labelKey);
       btn.addEventListener('click', function() {
         state.messageFilter = mode;
+        state.expandedThreads = new Set();
         var snap = state.teams[state.selectedTeam];
         if (snap) renderMessages(snap);
       });
@@ -638,11 +686,17 @@ export function getDashboardJs(): string {
       // 스레드 그룹핑
       var threads = groupIntoThreads(filtered);
 
-      // 최신 3개 스레드만 펼침
+      // 최초 렌더 시 최신 3개 스레드를 자동 펼침
+      if (state.expandedThreads.size === 0) {
+        for (var ai = Math.max(0, threads.length - 3); ai < threads.length; ai++) {
+          state.expandedThreads.add(ai);
+        }
+      }
+
       threads.forEach(function(thread, idx) {
         var threadEl = document.createElement('div');
         threadEl.className = 'msg-thread';
-        var isExpanded = idx >= threads.length - 3;
+        var isExpanded = state.expandedThreads.has(idx);
 
         // 스레드 헤더
         var header = document.createElement('div');
@@ -700,11 +754,18 @@ export function getDashboardJs(): string {
 
         threadEl.appendChild(body);
 
-        // 토글 클릭
-        header.addEventListener('click', function() {
-          var expanded = body.classList.toggle('expanded');
-          toggle.className = 'msg-thread-toggle' + (expanded ? ' expanded' : '');
-        });
+        // 토글 클릭 — state에 저장하여 재렌더링 시 유지
+        (function(threadIdx) {
+          header.addEventListener('click', function() {
+            if (state.expandedThreads.has(threadIdx)) {
+              state.expandedThreads.delete(threadIdx);
+            } else {
+              state.expandedThreads.add(threadIdx);
+            }
+            var snap = state.teams[state.selectedTeam];
+            if (snap) renderMessages(snap);
+          });
+        })(idx);
 
         el.appendChild(threadEl);
       });
