@@ -34,7 +34,7 @@ packages/
 
 ### Core + TUI (완료)
 TeamWatcher, ConfigParser, TaskParser, InboxParser, EventEmitter, 터미널 UI 전체 구현.
-미구현: TUI 의존성 그래프 (ASCII)
+TUI 인터랙티브 기능: focusMode 키보드 내비게이션 (Enter/Esc/↑↓), 태스크 상세 패널, 칸반 보드 (K 토글), 에이전트 상세 확장, 메시지 필터 (F 순환) + 스레드 그룹핑, Deps DAG 위상 정렬 레이어 (topoSortLayers 코어 유틸리티)
 
 ### VS Code 확장 (완료)
 WebView 대시보드 (Overview/Tasks/Messages/Deps 4탭), 트리뷰 사이드바, 상태 바, 칸반 보드 뷰 (테이블/칸반 토글), 다국어 전환 (Settings + 대시보드 버튼), 태스크 상세 패널 (인라인 아코디언), 메시지 필터+스레드 그룹핑, Deps DAG 그래프 (CSS Grid + SVG), Overview 에이전트 상세, 실시간 알림 (task:completed, agent:joined/left), 렌더 최적화 (dirty tab + 스냅샷 변경 감지)

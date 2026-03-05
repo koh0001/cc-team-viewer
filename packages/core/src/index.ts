@@ -71,3 +71,7 @@ export type {
   TranslateFn,
   I18nInstance,
 } from "./i18n/index.js";
+
+// 유틸리티 내보내기
+export { topoSortLayers } from "./utils/topo-sort.js";
+export type { TopoSortResult } from "./utils/topo-sort.js";

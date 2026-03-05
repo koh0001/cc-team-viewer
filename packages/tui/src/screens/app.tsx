@@ -2,8 +2,12 @@
  * CC Team Viewer TUI 메인 App
  *
  * 키보드 조작:
- *   Tab        → 뷰 전환 (개요/태스크/메시지/의존성)
- *   ↑/↓       → 팀 선택
+ *   Tab / 1-4  → 뷰 전환 (개요/태스크/메시지/의존성)
+ *   Enter      → sidebar: 뷰 진입 / view: 아이템 상세 토글
+ *   Escape     → view에서 sidebar로 복귀
+ *   ↑/↓       → sidebar: 팀 선택 / view: 커서 이동
+ *   K          → 태스크 뷰 모드 토글 (테이블 ↔ 칸반)
+ *   F          → 메시지 필터 순환 (전체/대화/시스템)
  *   L          → 언어 전환 (ko → en → ja → zh)
  *   q / Ctrl+C → 종료
  */
@@ -13,6 +17,7 @@ import { TeamWatcher } from "@cc-team-viewer/core";
 import type { TeamSnapshot, TranslationKey } from "@cc-team-viewer/core";
 import { AgentPanel } from "../components/agent-panel.js";
 import { TaskBoard, DependencyGraph } from "../components/task-board.js";
+import { KanbanBoard } from "../components/kanban-board.js";
 import { MessageLog } from "../components/message-log.js";
 import {
   ProgressBar,
@@ -36,6 +41,10 @@ interface AppProps {
   teamFilter?: string[];
 }
 
+export type FocusMode = "sidebar" | "view";
+export type MessageFilter = "all" | "conversation" | "system";
+const MESSAGE_FILTERS: MessageFilter[] = ["all", "conversation", "system"];
+
 export function App({ claudeDir, teamFilter }: AppProps) {
   const { exit } = useApp();
   const { t, locale, cycleLocale, localeName } = useI18n();
@@ -44,6 +53,13 @@ export function App({ claudeDir, teamFilter }: AppProps) {
   const [viewMode, setViewMode] = useState<ViewMode>("overview");
   const [error, setError] = useState<string>("");
   const [lastUpdate, setLastUpdate] = useState<number>(Date.now());
+
+  // 내비게이션 상태
+  const [focusMode, setFocusMode] = useState<FocusMode>("sidebar");
+  const [viewCursor, setViewCursor] = useState(0);
+  const [expandedItem, setExpandedItem] = useState<string | null>(null);
+  const [taskViewMode, setTaskViewMode] = useState<"table" | "kanban">("table");
+  const [messageFilter, setMessageFilter] = useState<MessageFilter>("all");
 
   // Watcher 초기화 및 이벤트 구독
   useEffect(() => {
@@ -90,6 +106,26 @@ export function App({ claudeDir, teamFilter }: AppProps) {
     }
   }, [snapshots, selectedTeam]);
 
+  // 뷰별 아이템 수 계산
+  const getViewItemCount = useCallback((): number => {
+    const snap = snapshots.get(selectedTeam);
+    if (!snap) return 0;
+    switch (viewMode) {
+      case "overview": return snap.agents.length;
+      case "tasks": return snap.tasks.length;
+      case "messages": return snap.messages.length;
+      case "deps": return snap.tasks.length;
+      default: return 0;
+    }
+  }, [snapshots, selectedTeam, viewMode]);
+
+  // 뷰 전환 시 커서 초기화
+  const switchView = useCallback((newView: ViewMode) => {
+    setViewMode(newView);
+    setViewCursor(0);
+    setExpandedItem(null);
+  }, []);
+
   // 키보드 입력 처리
   useInput((input, key) => {
     if (input === "q") {
@@ -103,30 +139,95 @@ export function App({ claudeDir, teamFilter }: AppProps) {
       return;
     }
 
-    // Tab → 뷰 전환
+    // Tab → 뷰 전환 (포커스 모드 무관)
     if (key.tab) {
-      setViewMode((prev) => {
-        const idx = VIEW_ORDER.indexOf(prev);
-        return VIEW_ORDER[(idx + 1) % VIEW_ORDER.length];
-      });
+      const idx = VIEW_ORDER.indexOf(viewMode);
+      switchView(VIEW_ORDER[(idx + 1) % VIEW_ORDER.length]);
       return;
     }
 
-    // ↑/↓ → 팀 선택
-    const teamNames = [...snapshots.keys()];
-    if (key.upArrow || key.downArrow) {
-      const currentIdx = teamNames.indexOf(selectedTeam);
-      if (key.upArrow && currentIdx > 0) {
-        setSelectedTeam(teamNames[currentIdx - 1]);
-      } else if (key.downArrow && currentIdx < teamNames.length - 1) {
-        setSelectedTeam(teamNames[currentIdx + 1]);
-      }
-    }
-
-    // 숫자 키 → 뷰 직접 선택
+    // 숫자 키 → 뷰 직접 선택 (포커스 모드 무관)
     const num = parseInt(input, 10);
     if (num >= 1 && num <= VIEW_ORDER.length) {
-      setViewMode(VIEW_ORDER[num - 1]);
+      switchView(VIEW_ORDER[num - 1]);
+      return;
+    }
+
+    // K → 칸반 토글 (tasks 뷰에서만)
+    if ((input === "K" || input === "k") && viewMode === "tasks") {
+      setTaskViewMode((prev) => prev === "table" ? "kanban" : "table");
+      setViewCursor(0);
+      setExpandedItem(null);
+      return;
+    }
+
+    // F → 메시지 필터 순환 (messages 뷰에서만)
+    if ((input === "F" || input === "f") && viewMode === "messages") {
+      setMessageFilter((prev) => {
+        const idx = MESSAGE_FILTERS.indexOf(prev);
+        return MESSAGE_FILTERS[(idx + 1) % MESSAGE_FILTERS.length];
+      });
+      setViewCursor(0);
+      setExpandedItem(null);
+      return;
+    }
+
+    // Escape → view 모드에서 sidebar로 복귀
+    if (key.escape) {
+      if (focusMode === "view") {
+        setFocusMode("sidebar");
+        setViewCursor(0);
+        setExpandedItem(null);
+      }
+      return;
+    }
+
+    // Enter → sidebar: 뷰 진입 / view: 아이템 토글
+    if (key.return) {
+      if (focusMode === "sidebar") {
+        setFocusMode("view");
+        setViewCursor(0);
+        setExpandedItem(null);
+      } else {
+        // 현재 커서 아이템 토글
+        const snap = snapshots.get(selectedTeam);
+        if (!snap) return;
+        let itemId: string | null = null;
+        if (viewMode === "overview" && snap.agents[viewCursor]) {
+          itemId = snap.agents[viewCursor].member.name;
+        } else if (viewMode === "tasks" && snap.tasks[viewCursor]) {
+          itemId = snap.tasks[viewCursor].id;
+        } else if (viewMode === "deps" && snap.tasks[viewCursor]) {
+          itemId = snap.tasks[viewCursor].id;
+        } else if (viewMode === "messages") {
+          itemId = String(viewCursor);
+        }
+        setExpandedItem((prev) => prev === itemId ? null : itemId);
+      }
+      return;
+    }
+
+    // ↑/↓ 방향키
+    if (key.upArrow || key.downArrow) {
+      if (focusMode === "sidebar") {
+        // 팀 선택
+        const teamNames = [...snapshots.keys()];
+        const currentIdx = teamNames.indexOf(selectedTeam);
+        if (key.upArrow && currentIdx > 0) {
+          setSelectedTeam(teamNames[currentIdx - 1]);
+        } else if (key.downArrow && currentIdx < teamNames.length - 1) {
+          setSelectedTeam(teamNames[currentIdx + 1]);
+        }
+      } else {
+        // 뷰 커서 이동
+        const maxItems = getViewItemCount();
+        if (maxItems === 0) return;
+        setViewCursor((prev) => {
+          if (key.upArrow) return Math.max(0, prev - 1);
+          return Math.min(maxItems - 1, prev + 1);
+        });
+      }
+      return;
     }
   });
 
@@ -171,13 +272,14 @@ export function App({ claudeDir, teamFilter }: AppProps) {
         <Box marginTop={1}>
           {/* 사이드바: 팀 목록 */}
           <Box flexDirection="column" width={28} marginRight={2}>
-            <Text bold color="gray">{t("sidebar.teamList")}</Text>
+            <Text bold color={focusMode === "sidebar" ? "cyan" : "gray"}>{t("sidebar.teamList")}</Text>
             <Text color="gray">{"─".repeat(26)}</Text>
             {[...snapshots.entries()].map(([name, snap]) => (
               <Box key={name}>
                 <Text
                   color={name === selectedTeam ? "cyan" : "white"}
                   bold={name === selectedTeam}
+                  inverse={name === selectedTeam && focusMode === "sidebar"}
                 >
                   {name === selectedTeam ? "▸ " : "  "}
                   {name}
@@ -229,10 +331,14 @@ export function App({ claudeDir, teamFilter }: AppProps) {
                     underline={viewMode === v}
                   >
                     [{i + 1}] {t(VIEW_KEYS[v])}
+                    {v === "tasks" && viewMode === "tasks" ? ` (${t(taskViewMode === "table" ? "task.viewTable" : "task.viewKanban")})` : ""}
                   </Text>
                 ))}
                 <Text color="gray" italic>
-                  {"  "}{t("view.tabHint")}
+                  {"  "}{focusMode === "sidebar" ? "Enter: view | " : "Esc: back | ↑↓ | "}
+                  {viewMode === "tasks" ? "K: toggle | " : ""}
+                  {viewMode === "messages" ? "F: filter | " : ""}
+                  {t("view.tabHint")}
                 </Text>
               </Box>
 
@@ -241,16 +347,37 @@ export function App({ claudeDir, teamFilter }: AppProps) {
                 {viewMode === "overview" && (
                   <>
                     <SectionHeader title={t("agent.sectionTitle", { count: snapshot.agents.length })} />
-                    <AgentPanel agents={snapshot.agents} t={t} />
+                    <AgentPanel
+                      agents={snapshot.agents}
+                      tasks={snapshot.tasks}
+                      t={t}
+                      cursorIndex={viewCursor}
+                      expandedItem={expandedItem}
+                      isActive={focusMode === "view"}
+                    />
                   </>
                 )}
 
                 {viewMode === "tasks" && (
-                  <TaskBoard
-                    tasks={snapshot.tasks}
-                    members={snapshot.config.members}
-                    t={t}
-                  />
+                  taskViewMode === "kanban" ? (
+                    <KanbanBoard
+                      tasks={snapshot.tasks}
+                      members={snapshot.config.members}
+                      t={t}
+                      cursorIndex={viewCursor}
+                      expandedItem={expandedItem}
+                      isActive={focusMode === "view"}
+                    />
+                  ) : (
+                    <TaskBoard
+                      tasks={snapshot.tasks}
+                      members={snapshot.config.members}
+                      t={t}
+                      cursorIndex={viewCursor}
+                      expandedItem={expandedItem}
+                      isActive={focusMode === "view"}
+                    />
+                  )
                 )}
 
                 {viewMode === "messages" && (
@@ -258,13 +385,23 @@ export function App({ claudeDir, teamFilter }: AppProps) {
                     messages={snapshot.messages}
                     members={snapshot.config.members}
                     t={t}
+                    filter={messageFilter}
+                    cursorIndex={viewCursor}
+                    expandedItem={expandedItem}
+                    isActive={focusMode === "view"}
                   />
                 )}
 
                 {viewMode === "deps" && (
                   <>
                     <SectionHeader title={t("deps.sectionTitle")} />
-                    <DependencyGraph tasks={snapshot.tasks} />
+                    <DependencyGraph
+                      tasks={snapshot.tasks}
+                      t={t}
+                      cursorIndex={viewCursor}
+                      expandedItem={expandedItem}
+                      isActive={focusMode === "view"}
+                    />
                   </>
                 )}
               </Box>

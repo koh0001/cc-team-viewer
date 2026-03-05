@@ -5,6 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.6] - 2026-03-06
+
+### Added
+
+- **TUI**: Focus mode navigation — Enter to enter view, Escape to return to sidebar, ↑/↓ cursor movement
+- **TUI**: Task detail panel — Enter on task row to expand description, blockedBy/blocks links
+- **TUI**: Kanban board view — K key to toggle between table and kanban, 3-column layout
+- **TUI**: Agent detail expansion — Enter on agent card to show assigned tasks with status icons
+- **TUI**: Message filter — F key to cycle All/Conversation/System filters
+- **TUI**: Message thread grouping — consecutive same-sender messages grouped with tree-line prefixes
+- **TUI**: Deps DAG graph — topological sort layers with box-drawing node rendering
+- **Core**: `topoSortLayers()` utility extracted as shared pure function for DAG layout computation
+
 ## [0.1.5] - 2026-03-05
 
 ### Added
